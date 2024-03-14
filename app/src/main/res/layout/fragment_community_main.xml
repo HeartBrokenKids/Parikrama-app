@@ -3,15 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
+    <!-- News Section -->
     <LinearLayout
         android:id="@+id/news_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <ListView
-            android:id="@+id/news_list_view"
+
+        <!-- This is where the news fragment will be included -->
+        <fragment
+            android:id="@+id/news_fragment"
+            android:name="com.example.parikramaapp.communityAndSocial.LocalNewsFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
     </LinearLayout>
 
     <!-- Forums Section -->
@@ -20,10 +26,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:text="Sample forums container"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sample forums container" />
         <!-- Add your forums UI elements here -->
         <!-- For example, RecyclerView or ListView -->
 
@@ -35,10 +42,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Sample volunteering container"/>
+            android:layout_height="wrap_content"
+            android:text="Sample volunteering container" />
         <!-- Add your volunteering UI elements here -->
         <!-- For example, RecyclerView or ListView -->
 
