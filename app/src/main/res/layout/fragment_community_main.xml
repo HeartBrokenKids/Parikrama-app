@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Local News Section -->
+    <LinearLayout
+        android:id="@+id/local_news_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Add your local news UI elements here -->
+        <!-- For example, RecyclerView or ListView -->
+
+    </LinearLayout>
+
+    <!-- Forums Section -->
+    <LinearLayout
+        android:id="@+id/forums_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Add your forums UI elements here -->
+        <!-- For example, RecyclerView or ListView -->
+
+    </LinearLayout>
+
+    <!-- Volunteering Section -->
+    <LinearLayout
+        android:id="@+id/volunteering_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Add your volunteering UI elements here -->
+        <!-- For example, RecyclerView or ListView -->
+
+    </LinearLayout>
+
+</LinearLayout>

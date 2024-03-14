@@ -2,3 +2,20 @@
 Local News and Events: Community news, Upcoming events, Festivals.
 Forums and Social Platforms: Discussion boards, Local interest groups.
 Volunteering and Charities: Opportunities, Event organization, Community support.
+
+
+
+// Fetch user's current city (Assuming you have a method to get the city)
+        String userCity = getUserCity();
+
+        // Call news API with user's city
+        // Example: NewsAPI - Replace YOUR_API_KEY with your actual API key
+        String apiKey = "YOUR_API_KEY";
+        String newsUrl = "https://newsapi.org/v2/top-headlines?q=" + userCity + "&apiKey=" + apiKey;
+
+        // Now, make a network request to fetch news using Retrofit, Volley, or OkHttp
+        // Parse the response and update UI with top news headlines
+
+        // Example: Set a dummy text to TextView for demonstration
+        TextView textView = rootView.findViewById(R.id.news_text_view);
+        textView.setText("Top News in " + userCity);
