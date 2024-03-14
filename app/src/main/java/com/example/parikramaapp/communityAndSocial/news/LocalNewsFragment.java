@@ -81,7 +81,7 @@ public class LocalNewsFragment extends Fragment {
         } else {
             // Permission already granted, start location updates
             startLocationUpdates();
-            loadLocalNews();
+//            loadLocalNews();
         }
 
         return rootView;
@@ -120,7 +120,7 @@ public class LocalNewsFragment extends Fragment {
                             // Get user's city from location
                             String userCity = getUserCity(location.getLatitude(), location.getLongitude());
                             // Fetch news for the user's city
-                            fetchNews(userCity);
+//                            fetchNews(userCity);
                         }
                     }
                 }
@@ -149,158 +149,158 @@ public class LocalNewsFragment extends Fragment {
         return "Unknown";
     }
 
-    private void fetchNews(String city) {
-        Log.d("LocalNewsFragment", "Fetching news for city: " + city);
+//    private void fetchNews(String city) {
+//        Log.d("LocalNewsFragment", "Fetching news for city: " + city);
+//
+//        // Replace YOUR_API_KEY with your actual News API key
+//        String apiKey = "69d6dd6a81fa4b2ca2d88c3459443a42";
+//        String url = "https://newsapi.org/v2/top-headlines?q=" + URLEncoder.encode(city) + "&apiKey=" + apiKey;
+//
+//        new FetchNewsTask().execute(url);
+//    }
 
-        // Replace YOUR_API_KEY with your actual News API key
-        String apiKey = "69d6dd6a81fa4b2ca2d88c3459443a42";
-        String url = "https://newsapi.org/v2/top-headlines?q=" + URLEncoder.encode(city) + "&apiKey=" + apiKey;
+//    private class FetchNewsTask extends AsyncTask<String, Void, String> {
+//
+//        @Override
+//        protected String doInBackground(String... urls) {
+//            if (urls.length < 1 || urls[0] == null) {
+//                return null;
+//            }
+//
+//            String jsonResponse = null;
+//            HttpURLConnection urlConnection = null;
+//            InputStream inputStream = null;
+//            BufferedReader reader = null;
+//
+//            try {
+//                URL url = new URL(urls[0]);
+//                urlConnection = (HttpURLConnection) url.openConnection();
+//                urlConnection.setRequestMethod("GET");
+//                urlConnection.connect();
+//
+//                inputStream = urlConnection.getInputStream();
+//                StringBuilder builder = new StringBuilder();
+//                if (inputStream != null) {
+//                    reader = new BufferedReader(new InputStreamReader(inputStream));
+//                    String line;
+//                    while ((line = reader.readLine()) != null) {
+//                        builder.append(line);
+//                    }
+//                    jsonResponse = builder.toString();
+//                }
+//            } catch (IOException e) {
+//                Log.e("LocalNewsFragment", "Error retrieving news JSON", e);
+//            } finally {
+//                if (urlConnection != null) {
+//                    urlConnection.disconnect();
+//                }
+//                if (inputStream != null) {
+//                    try {
+//                        inputStream.close();
+//                    } catch (IOException e) {
+//                        Log.e("LocalNewsFragment", "Error closing input stream", e);
+//                    }
+//                }
+//                if (reader != null) {
+//                    try {
+//                        reader.close();
+//                    } catch (IOException e) {
+//                        Log.e("LocalNewsFragment", "Error closing reader", e);
+//                    }
+//                }
+//            }
+//
+//            return jsonResponse;
+//        }
+//
+////        @Override
+////        protected void onPostExecute(String jsonResponse) {
+////            if (jsonResponse != null) {
+////                saveNewsToFile(jsonResponse); // Save the news JSON to a local file
+////                updateNewsList(jsonResponse);
+////            }
+////        }
+//    }
 
-        new FetchNewsTask().execute(url);
-    }
+//    private void updateNewsList(String jsonResponse) {
+//        try {
+//            JSONObject responseJson = new JSONObject(jsonResponse);
+//            if ("ok".equals(responseJson.getString("status"))) {
+//                JSONArray articlesArray = responseJson.getJSONArray("articles");
+//                List<Article> articles = new ArrayList<>();
+//                for (int i = 0; i < articlesArray.length(); i++) {
+//                    JSONObject articleJson = articlesArray.getJSONObject(i);
+//                    Article article = new Article(
+//                            articleJson.getString("title"),
+//                            articleJson.getString("description"),
+//                            articleJson.getString("url"),
+//                            articleJson.getString("urlToImage"),
+//                            articleJson.getString("publishedAt")
+//                    );
+//                    articles.add(article);
+//                }
+//                // Update the UI with the fetched articles
+//                getActivity().runOnUiThread(() -> {
+//                    NewsAdapter adapter = new NewsAdapter(requireContext(), articles);
+//                    newsListView.setAdapter(adapter);
+//                });
+//            } else {
+//                Log.e("LocalNewsFragment", "News API returned an error: " + responseJson.getString("message"));
+//            }
+//        } catch (JSONException e) {
+//            Log.e("LocalNewsFragment", "Error parsing news JSON", e);
+//        }
+//    }
 
-    private class FetchNewsTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... urls) {
-            if (urls.length < 1 || urls[0] == null) {
-                return null;
-            }
-
-            String jsonResponse = null;
-            HttpURLConnection urlConnection = null;
-            InputStream inputStream = null;
-            BufferedReader reader = null;
-
-            try {
-                URL url = new URL(urls[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                inputStream = urlConnection.getInputStream();
-                StringBuilder builder = new StringBuilder();
-                if (inputStream != null) {
-                    reader = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                    jsonResponse = builder.toString();
-                }
-            } catch (IOException e) {
-                Log.e("LocalNewsFragment", "Error retrieving news JSON", e);
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (inputStream != null) {
-                    try {
-                        inputStream.close();
-                    } catch (IOException e) {
-                        Log.e("LocalNewsFragment", "Error closing input stream", e);
-                    }
-                }
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        Log.e("LocalNewsFragment", "Error closing reader", e);
-                    }
-                }
-            }
-
-            return jsonResponse;
-        }
-
-        @Override
-        protected void onPostExecute(String jsonResponse) {
-            if (jsonResponse != null) {
-                saveNewsToFile(jsonResponse); // Save the news JSON to a local file
-                updateNewsList(jsonResponse);
-            }
-        }
-    }
-
-    private void updateNewsList(String jsonResponse) {
-        try {
-            JSONObject responseJson = new JSONObject(jsonResponse);
-            if ("ok".equals(responseJson.getString("status"))) {
-                JSONArray articlesArray = responseJson.getJSONArray("articles");
-                List<Article> articles = new ArrayList<>();
-                for (int i = 0; i < articlesArray.length(); i++) {
-                    JSONObject articleJson = articlesArray.getJSONObject(i);
-                    Article article = new Article(
-                            articleJson.getString("title"),
-                            articleJson.getString("description"),
-                            articleJson.getString("url"),
-                            articleJson.getString("urlToImage"),
-                            articleJson.getString("publishedAt")
-                    );
-                    articles.add(article);
-                }
-                // Update the UI with the fetched articles
-                getActivity().runOnUiThread(() -> {
-                    NewsAdapter adapter = new NewsAdapter(requireContext(), articles);
-                    newsListView.setAdapter(adapter);
-                });
-            } else {
-                Log.e("LocalNewsFragment", "News API returned an error: " + responseJson.getString("message"));
-            }
-        } catch (JSONException e) {
-            Log.e("LocalNewsFragment", "Error parsing news JSON", e);
-        }
-    }
-
-    private void loadLocalNews() {
-        String newsJson = readNewsFromFile();
-        if (!newsJson.isEmpty()) {
-            updateNewsList(newsJson);
-        } else {
-            // If there's no local file, fetch news normally
-            startLocationUpdates();
-        }
-    }
-    private void saveNewsToFile(String newsJson) {
-        FileOutputStream fos = null;
-        try {
-            fos = requireContext().openFileOutput("local_news.json", Context.MODE_PRIVATE);
-            fos.write(newsJson.getBytes());
-            Log.d("LocalNewsFragment", "News saved locally");
-        } catch (Exception e) {
-            Log.e("LocalNewsFragment", "Error saving news", e);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    Log.e("LocalNewsFragment", "Error closing file output stream", e);
-                }
-            }
-        }
-    }
-    private String readNewsFromFile() {
-        FileInputStream fis = null;
-        StringBuilder builder = new StringBuilder();
-        try {
-            fis = requireContext().openFileInput("local_news.json");
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader reader = new BufferedReader(isr);
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-        } catch (Exception e) {
-            Log.e("LocalNewsFragment", "Error reading news from file", e);
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    Log.e("LocalNewsFragment", "Error closing file input stream", e);
-                }
-            }
-        }
-        return builder.toString();
-    }
+//    private void loadLocalNews() {
+//        String newsJson = readNewsFromFile();
+//        if (!newsJson.isEmpty()) {
+//            updateNewsList(newsJson);
+//        } else {
+//            // If there's no local file, fetch news normally
+//            startLocationUpdates();
+//        }
+//    }
+//    private void saveNewsToFile(String newsJson) {
+//        FileOutputStream fos = null;
+//        try {
+//            fos = requireContext().openFileOutput("local_news.json", Context.MODE_PRIVATE);
+//            fos.write(newsJson.getBytes());
+//            Log.d("LocalNewsFragment", "News saved locally");
+//        } catch (Exception e) {
+//            Log.e("LocalNewsFragment", "Error saving news", e);
+//        } finally {
+//            if (fos != null) {
+//                try {
+//                    fos.close();
+//                } catch (IOException e) {
+//                    Log.e("LocalNewsFragment", "Error closing file output stream", e);
+//                }
+//            }
+//        }
+//    }
+//    private String readNewsFromFile() {
+//        FileInputStream fis = null;
+//        StringBuilder builder = new StringBuilder();
+//        try {
+//            fis = requireContext().openFileInput("local_news.json");
+//            InputStreamReader isr = new InputStreamReader(fis);
+//            BufferedReader reader = new BufferedReader(isr);
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                builder.append(line);
+//            }
+//        } catch (Exception e) {
+//            Log.e("LocalNewsFragment", "Error reading news from file", e);
+//        } finally {
+//            if (fis != null) {
+//                try {
+//                    fis.close();
+//                } catch (IOException e) {
+//                    Log.e("LocalNewsFragment", "Error closing file input stream", e);
+//                }
+//            }
+//        }
+//        return builder.toString();
+//    }
 }

@@ -1,4 +1,4 @@
-package com.example.parikramaapp.communityAndSocial;
+package com.example.parikramaapp.communityAndSocial.volunteering;
 
 import android.os.Bundle;
 

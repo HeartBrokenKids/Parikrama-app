@@ -1,6 +1,7 @@
 package com.example.parikramaapp.communityAndSocial.forum;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parikramaapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,18 +30,19 @@ public class DiscussionFragment extends Fragment {
     private FirebaseFirestore db;
     private ArrayList<String> discussionTitles;
     private ArrayList<String> discussionIds;
+    private RecyclerView recyclerViewDiscussions;
+    private DiscussionAdapter adapter;
 
     public DiscussionFragment() {
         // Required empty public constructor
     }
 
-    public static DiscussionFragment newInstance() {
-        return new DiscussionFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public static DiscussionFragment newInstance(String forumId) {
+        DiscussionFragment fragment = new DiscussionFragment();
+        Bundle args = new Bundle();
+        args.putString("forumId", forumId);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -47,10 +50,23 @@ public class DiscussionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_discussion, container, false);
 
-        listViewDiscussions = rootView.findViewById(R.id.listViewDiscussions);
+        recyclerViewDiscussions = rootView.findViewById(R.id.recyclerViewDiscussions);
+        recyclerViewDiscussions.setLayoutManager(new LinearLayoutManager(getContext()));
         db = FirebaseFirestore.getInstance();
         discussionTitles = new ArrayList<>();
         discussionIds = new ArrayList<>();
+        adapter = new DiscussionAdapter(getContext(), discussionTitles, discussionIds);
+
+        recyclerViewDiscussions.setAdapter(adapter);
+
+        // Set click listener
+        adapter.setClickListener(new DiscussionAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                String discussionId = adapter.getItem(position);
+                openDiscussionDetailsFragment(discussionId);
+            }
+        });
 
         // Fetch discussions
         fetchDiscussions();
@@ -59,36 +75,50 @@ public class DiscussionFragment extends Fragment {
     }
 
     private void fetchDiscussions() {
-        // Here you should fetch discussions from Firestore based on the selected forum
-        // For now, I'll demonstrate fetching all discussions
-        db.collection("forums").document("yourForumId").collection("discussions")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String title = document.getString("title");
-                                String discussionId = document.getId();
-                                discussionTitles.add(title);
-                                discussionIds.add(discussionId);
+        if (getArguments() != null) {
+            String forumId = getArguments().getString("forumId");
+            db.collection("forums").document(forumId).collection("discussions")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String title = document.getString("title");
+                                    String discussionId = document.getId();
+                                    discussionTitles.add(title);
+                                    discussionIds.add(discussionId);
+                                }
+                                Log.d("DiscussionFragment", "Number of discussions fetched: " + discussionTitles.size());
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Log.e("DiscussionFragment", "Error getting documents: ", task.getException());
+                                Toast.makeText(getContext(), "Failed to fetch discussions", Toast.LENGTH_SHORT).show();
                             }
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, discussionTitles);
-                            listViewDiscussions.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(getContext(), "Failed to fetch discussions", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
+        } else {
+            Toast.makeText(getContext(), "Forum ID is null", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-        // Handle item click listener for discussions
-        listViewDiscussions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String discussionId = discussionIds.get(position);
-                // Start a new activity or fragment to display the details of the selected discussion
-                // Pass the discussionId to the new activity or fragment
-            }
-        });
+
+
+
+    private void openDiscussionDetailsFragment(String discussionId) {
+        // Get the selected forum ID again from arguments to pass along with discussion ID
+        String forumId = getArguments() != null ? getArguments().getString("forumId") : "";
+
+        // Check if the forum ID is not null or empty
+        if (forumId != null && !forumId.isEmpty()) {
+            DiscussionDetailsFragment fragment = DiscussionDetailsFragment.newInstance(forumId, discussionId);
+            // Navigate to the DiscussionDetailsFragment
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.forums_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        } else {
+            Toast.makeText(getContext(), "Error: Forum ID is not available.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

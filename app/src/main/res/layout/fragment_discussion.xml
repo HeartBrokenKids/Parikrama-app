@@ -12,13 +12,12 @@
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <!-- ListView to display discussions -->
-    <ListView
-        android:id="@+id/listViewDiscussions"
+    <!-- RecyclerView to display discussions -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewDiscussions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="8dp" />
+        android:layout_marginTop="1dp" />
 
 </RelativeLayout>
