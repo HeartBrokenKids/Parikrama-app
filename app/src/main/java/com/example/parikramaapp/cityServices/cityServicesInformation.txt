@@ -1,0 +1,4 @@
+1. City Services
+Utilities and Bills: Electricity, Water, Gas, Internet.
+Government Services: Tax payments, Permit applications, Public records.
+Healthcare Services: Hospital appointments, Pharmacy information, Emergency services.

@@ -1,0 +1,4 @@
+2. Transportation
+Public Transit: Bus schedules, Train routes, Real-time updates.
+Ride-Sharing and Taxis: Booking options, Fare estimates.
+Parking Solutions: Spot availability, Reservation services, Payment options.
