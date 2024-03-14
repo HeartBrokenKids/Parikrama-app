@@ -1,38 +1,34 @@
 package com.example.parikramaapp.home;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parikramaapp.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link homeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class homeFragment extends Fragment implements serviceAdapter.ItemClickListener {
+public class homeFragment extends Fragment implements serviceAdapter.ItemClickListener, PreferencesDialogFragment.PreferencesDialogListener {
 
     private RecyclerView recyclerView;
+    private List<serviceItem> services;
     private serviceAdapter adapter;
+    private boolean[] selectedPreferences;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -40,15 +36,6 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment homeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static homeFragment newInstance(String param1, String param2) {
         homeFragment fragment = new homeFragment();
         Bundle args = new Bundle();
@@ -68,28 +55,40 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        initializeServicesList();
+        setupRecyclerView(view);
+        setupSearchView(view);
+        setupEditButton(view);
+        return view;
+    }
 
-        // Data for the cards
-        List<serviceItem> services = new ArrayList<>();
-        services.add(new serviceItem("City Services", R.drawable.cityserviceicon));
-        services.add(new serviceItem("Food Rescue", R.drawable.foodrescueicon));
-        services.add(new serviceItem("Transportation", R.drawable.transportationicon));
-        services.add(new serviceItem("Local Exploration", R.drawable.localexplorationicon));
-        services.add(new serviceItem("Community", R.drawable.communnityicon));
-        services.add(new serviceItem("Economic Opportunity", R.drawable.economicopportunitiesicon));
-        services.add(new serviceItem("Environment and Health", R.drawable.environmentandhealthicon));
-        services.add(new serviceItem("Education", R.drawable.educationicon));
+    private void initializeServicesList() {
+        services = Arrays.asList(
+                new serviceItem("City Services", R.drawable.cityserviceicon),
+                new serviceItem("Food Rescue", R.drawable.foodrescueicon),
+                new serviceItem("Transportation", R.drawable.transportationicon),
+                new serviceItem("Local Exploration", R.drawable.localexplorationicon),
+                new serviceItem("Community", R.drawable.communnityicon),
+                new serviceItem("Economic Opportunity", R.drawable.economicopportunitiesicon),
+                new serviceItem("Environment and Health", R.drawable.environmentandhealthicon),
+                new serviceItem("Education", R.drawable.educationicon)
+        );
 
+        selectedPreferences = new boolean[services.size()];
+        Arrays.fill(selectedPreferences, true);
+    }
+
+    private void setupRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3)); // 3 columns
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new serviceAdapter(getContext(), services);
-        adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+        adapter.setClickListener(this);
+    }
 
-
+    private void setupSearchView(View view) {
         SearchView searchView = view.findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -103,10 +102,32 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
                 return true;
             }
         });
-
-        return view;
     }
 
+    private void setupEditButton(View view) {
+        TextView editButton = view.findViewById(R.id.editbutton);
+        editButton.setOnClickListener(v -> showPreferencesDialog());
+    }
+
+    private void showPreferencesDialog() {
+        // Convert your list of serviceItems to a list of Strings for the service names.
+        List<String> serviceNames = new ArrayList<>();
+        for (serviceItem item : services) {
+            serviceNames.add(item.getTitle()); // Assuming getServiceName() returns the name of the service.
+        }
+
+        // Now use the newInstance method to create the PreferencesDialogFragment.
+        PreferencesDialogFragment dialogFragment = PreferencesDialogFragment.newInstance(serviceNames, selectedPreferences);
+        dialogFragment.setTargetFragment(this, 0); // 'this' refers to homeFragment instance.
+        dialogFragment.show(getParentFragmentManager(), "PreferencesDialogFragment");
+    }
+
+
+    @Override
+    public void onPreferencesSelected(boolean[] selectedPreferences) {
+        this.selectedPreferences = selectedPreferences;
+        adapter.filterDisplayedServices(selectedPreferences);
+    }
     @Override
     public void onItemClick(View view, int position) {
         Fragment selectedFragment = null;
