@@ -166,6 +166,7 @@ public class localNewsFragment extends Fragment {
                 newsText.append(title).append(": ").append(description).append("\n\n");
             }
             newsTextView.setText(newsText.toString());
+            newsTextView.setText("This is working");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -192,7 +193,6 @@ public class localNewsFragment extends Fragment {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.connect();
-
                 InputStream inputStream = connection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 StringBuilder stringBuilder = new StringBuilder();
@@ -200,6 +200,7 @@ public class localNewsFragment extends Fragment {
                 while ((line = bufferedReader.readLine()) != null) {
                     stringBuilder.append(line);
                 }
+
                 return stringBuilder.toString();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -1,13 +1,21 @@
 package com.example.parikramaapp.communityAndSocial;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import androidx.fragment.app.Fragment;
+
 import com.example.parikramaapp.R;
 
+import java.util.ArrayList;
+
 public class communityMainFragment extends Fragment {
+
+    private ListView newsListView;
 
     public communityMainFragment() {
         // Required empty public constructor
@@ -22,20 +30,18 @@ public class communityMainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_community_main, container, false);
 
-        // Inflate layouts for local news, forums, and volunteering
-        View localNewsLayout = inflater.inflate(R.layout.fragment_local_news, container, false);
-        View forumsLayout = inflater.inflate(R.layout.fragment_forum, container, false);
-        View volunteeringLayout = inflater.inflate(R.layout.fragment_volunteering, container, false);
+        // Initialize views
+        newsListView = rootView.findViewById(R.id.news_list_view);
 
-        // Add these layouts to the main layout (rootView)
-        // For example, assuming you have LinearLayouts in your XML layout
-        ViewGroup localNewsContainer = rootView.findViewById(R.id.local_news_container);
-        ViewGroup forumsContainer = rootView.findViewById(R.id.forums_container);
-        ViewGroup volunteeringContainer = rootView.findViewById(R.id.volunteering_container);
+        // Dummy data for testing
+        ArrayList<String> newsList = new ArrayList<>();
+        newsList.add("News 1: This is a sample news article.");
+        newsList.add("News 2: Another sample news article.");
+        newsList.add("News 3: Yet another sample news article.");
 
-        localNewsContainer.addView(localNewsLayout);
-        forumsContainer.addView(forumsLayout);
-        volunteeringContainer.addView(volunteeringLayout);
+        // Create adapter and set it to ListView
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, newsList);
+        newsListView.setAdapter(adapter);
 
         return rootView;
     }
