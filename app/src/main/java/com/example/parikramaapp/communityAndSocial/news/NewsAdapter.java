@@ -1,4 +1,4 @@
-package com.example.parikramaapp.communityAndSocial;
+package com.example.parikramaapp.communityAndSocial.news;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.parikramaapp.R;
+import com.example.parikramaapp.communityAndSocial.news.Article;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 

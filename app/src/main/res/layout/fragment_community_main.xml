@@ -14,7 +14,7 @@
         <!-- This is where the news fragment will be included -->
         <fragment
             android:id="@+id/news_fragment"
-            android:name="com.example.parikramaapp.communityAndSocial.LocalNewsFragment"
+            android:name="com.example.parikramaapp.communityAndSocial.news.LocalNewsFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -27,12 +27,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <fragment
+            android:id="@+id/forum_fragment"
+            android:name="com.example.parikramaapp.communityAndSocial.forum.ForumFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sample forums container" />
-        <!-- Add your forums UI elements here -->
-        <!-- For example, RecyclerView or ListView -->
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

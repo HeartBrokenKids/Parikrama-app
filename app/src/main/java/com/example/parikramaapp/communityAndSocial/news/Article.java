@@ -1,4 +1,4 @@
-package com.example.parikramaapp.communityAndSocial;
+package com.example.parikramaapp.communityAndSocial.news;
 
 public class Article {
     private String title;
