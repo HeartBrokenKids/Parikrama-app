@@ -104,6 +104,7 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
         });
     }
 
+
     private void setupEditButton(View view) {
         TextView editButton = view.findViewById(R.id.editbutton);
         editButton.setOnClickListener(v -> showPreferencesDialog());
@@ -130,54 +131,11 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
     }
     @Override
     public void onItemClick(View view, int position) {
-        Fragment selectedFragment = null;
-
-        switch (position) {
-            case 0:
-//                selectedFragment = new CityServicesFragment();
-                Toast.makeText(getContext(), "City", Toast.LENGTH_SHORT).show();
-                break;
-            case 1:
-//                selectedFragment = new FoodRescueFragment();
-                Toast.makeText(getContext(), "Food", Toast.LENGTH_SHORT).show();
-                break;
-            case 2:
-//                selectedFragment = new TransportationFragment();
-                Toast.makeText(getContext(), "Transport", Toast.LENGTH_SHORT).show();
-                break;
-            case 3:
-//                selectedFragment = new LocalExplorationFragment();
-                Toast.makeText(getContext(), "Local", Toast.LENGTH_SHORT).show();
-                break;
-            case 4:
-//                selectedFragment = new communityMainFragment();
-                Toast.makeText(getContext(), "Community", Toast.LENGTH_SHORT).show();
-                break;
-            case 5:
-//                selectedFragment = new EconomicOpportunitiesFragment();
-                Toast.makeText(getContext(), "Economic", Toast.LENGTH_SHORT).show();
-                break;
-            case 6:
-//                selectedFragment = new EnvironmentAndHealthFragment();
-                Toast.makeText(getContext(), "Env", Toast.LENGTH_SHORT).show();
-                break;
-            case 7:
-//                selectedFragment = new EducationFragment();
-                Toast.makeText(getContext(), "Edu", Toast.LENGTH_SHORT).show();
-                break;
-            case 8:
-//                selectedFragment = new SafetyFragment();
-                Toast.makeText(getContext(), "safety", Toast.LENGTH_SHORT).show();
-                break;
-            // Add more cases as needed for additional cards
-        }
-
-        // Perform the fragment transaction
-        if (selectedFragment != null) {
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, selectedFragment) // Ensure you have a container in your layout to replace fragments
-                    .addToBackStack(null) // Add transaction to back stack for navigation
-                    .commit();
+        serviceItem clickedItem = adapter.getCurrentItem(position);
+        if (clickedItem != null) {
+            Toast.makeText(getContext(), clickedItem.getTitle(), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Error: Item not found.", Toast.LENGTH_SHORT).show();
         }
     }
 

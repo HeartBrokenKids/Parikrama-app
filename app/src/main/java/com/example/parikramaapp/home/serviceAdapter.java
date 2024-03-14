@@ -58,6 +58,13 @@ public class serviceAdapter extends RecyclerView.Adapter<serviceAdapter.ViewHold
         return displayedServices.size();
     }
 
+    public serviceItem getCurrentItem(int position) {
+        if (position >= 0 && position < displayedServices.size()) {
+            return displayedServices.get(position);
+        }
+        return null;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tvCardTitle;
         ImageView iconImage;
@@ -71,7 +78,12 @@ public class serviceAdapter extends RecyclerView.Adapter<serviceAdapter.ViewHold
 
         @Override
         public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
+            if (clickListener != null) {
+                int adapterPosition = getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    clickListener.onItemClick(view, adapterPosition);
+                }
+            }
         }
     }
 
@@ -97,14 +109,14 @@ public class serviceAdapter extends RecyclerView.Adapter<serviceAdapter.ViewHold
     }
 
     public void filter(String text) {
-        services.clear();
+        displayedServices.clear();
         if (text.isEmpty()) {
-            services.addAll(servicesFull);
+            displayedServices.addAll(allServices);
         } else {
             text = text.toLowerCase();
-            for (serviceItem item : servicesFull) {
+            for (serviceItem item : allServices) {
                 if (item.getTitle().toLowerCase().contains(text)) {
-                    services.add(item);
+                    displayedServices.add(item);
                 }
             }
         }
