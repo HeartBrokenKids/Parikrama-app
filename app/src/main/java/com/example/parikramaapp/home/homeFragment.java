@@ -9,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.parikramaapp.R;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +22,10 @@ import java.util.List;
  * Use the {@link homeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class homeFragment extends Fragment implements ServiceAdapter.ItemClickListener {
+public class homeFragment extends Fragment implements serviceAdapter.ItemClickListener {
 
     private RecyclerView recyclerView;
-    private ServiceAdapter adapter;
+    private serviceAdapter adapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -72,17 +73,36 @@ public class homeFragment extends Fragment implements ServiceAdapter.ItemClickLi
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Data for the cards
-        List<String> services = Arrays.asList(
-                "City Services", "Food Rescue", "Transportation",
-                "Local Exploration", "Community", "Economic Opportunities",
-                "Environment and Health", "Education", "Safety");
+        List<serviceItem> services = new ArrayList<>();
+        services.add(new serviceItem("City Services", R.drawable.cityserviceicon));
+        services.add(new serviceItem("Food Rescue", R.drawable.foodrescueicon));
+        services.add(new serviceItem("Transportation", R.drawable.transportationicon));
+        services.add(new serviceItem("Local Exploration", R.drawable.localexplorationicon));
+        services.add(new serviceItem("Community", R.drawable.communnityicon));
+        services.add(new serviceItem("Economic Opportunity", R.drawable.economicopportunitiesicon));
+        services.add(new serviceItem("Environment and Health", R.drawable.environmentandhealthicon));
+        services.add(new serviceItem("Education", R.drawable.educationicon));
 
-        // Set up the RecyclerView
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3)); // 3 columns
-        adapter = new ServiceAdapter(getContext(), services);
+        adapter = new serviceAdapter(getContext(), services);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+
+
+        SearchView searchView = view.findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText);
+                return true;
+            }
+        });
 
         return view;
     }
@@ -105,8 +125,8 @@ public class homeFragment extends Fragment implements ServiceAdapter.ItemClickLi
                 Toast.makeText(getContext(), "Transport", Toast.LENGTH_SHORT).show();
                 break;
             case 3:
-                selectedFragment = new LocalExplorationFragment();
-//                Toast.makeText(getContext(), "Local", Toast.LENGTH_SHORT).show();
+//                selectedFragment = new LocalExplorationFragment();
+                Toast.makeText(getContext(), "Local", Toast.LENGTH_SHORT).show();
                 break;
             case 4:
 //                selectedFragment = new communityMainFragment();
