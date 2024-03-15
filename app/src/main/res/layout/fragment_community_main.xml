@@ -1,54 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <!-- News Section -->
-    <LinearLayout
-        android:id="@+id/news_container"
+    <GridView
+        android:id="@+id/grid_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:numColumns="1"
+        android:verticalSpacing="20dp"
+        android:horizontalSpacing="20dp"
+        android:padding="20dp" />
 
-        <!-- This is where the news fragment will be included -->
-        <fragment
-            android:id="@+id/news_fragment"
-            android:name="com.example.parikramaapp.communityAndSocial.news.LocalNewsFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <!-- Forums Section -->
-    <LinearLayout
-        android:id="@+id/forums_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <fragment
-            android:id="@+id/forum_fragment"
-            android:name="com.example.parikramaapp.communityAndSocial.forum.ForumFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <!-- Volunteering Section -->
-    <LinearLayout
-        android:id="@+id/volunteering_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sample volunteering container" />
-        <!-- Add your volunteering UI elements here -->
-        <!-- For example, RecyclerView or ListView -->
-
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
