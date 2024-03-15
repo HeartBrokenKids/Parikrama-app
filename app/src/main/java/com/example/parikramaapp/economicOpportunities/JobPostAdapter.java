@@ -24,12 +24,7 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
     private static final String TAG = "JobPostAdapter";
     private List<JobPost> jobPosts;
     private Context context;
-    private OnUpvoteClickListener upvoteClickListener;
     private FirebaseFirestore db;
-
-    public void setOnUpvoteClickListener(OnUpvoteClickListener listener) {
-        this.upvoteClickListener = listener;
-    }
 
     public JobPostAdapter(List<JobPost> jobPosts, Context context) {
         this.jobPosts = jobPosts;
@@ -60,23 +55,22 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
         private TextView textViewTitle;
         private TextView textViewDescription;
         private TextView textViewContactInfo;
-        private Button btnUpvote; // New button for upvoting
+        private Button btnUpvote;
 
         public JobPostViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
             textViewDescription = itemView.findViewById(R.id.textViewDescription);
             textViewContactInfo = itemView.findViewById(R.id.textViewContactInfo);
-            btnUpvote = itemView.findViewById(R.id.btnUpvote); // Initialize upvote button
+            btnUpvote = itemView.findViewById(R.id.btnUpvote);
 
-            // Set up click listener for upvote button
             btnUpvote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Call the upvote method of the adapter passing the position
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        upvote(position);
+                        JobPost jobPost = jobPosts.get(position);
+                        updateUpvoteCount(jobPost, position);
                     }
                 }
             });
@@ -86,39 +80,31 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
             textViewTitle.setText(jobPost.getTitle());
             textViewDescription.setText(jobPost.getDescription());
             textViewContactInfo.setText(jobPost.getContactInfo());
-            btnUpvote.setText("Upvote (" + jobPost.getUpvotes() + ")");
-        }
-
-        public void upvote(int position) {
-            if (upvoteClickListener != null) {
-                upvoteClickListener.onUpvoteClick(position);
-            }
+            btnUpvote.setText(context.getString(R.string.upvote_button_text, jobPost.getUpvotes()));
         }
     }
 
-    public interface OnUpvoteClickListener {
-        void onUpvoteClick(int position);
+    private void updateUpvoteCount(final JobPost jobPost, final int position) {
+        if (jobPost.getId() != null) {
+            final int newUpvotes = jobPost.getUpvotes() + 1;
+            db.collection("job_posts").document(jobPost.getId())
+                    .update("upvotes", newUpvotes)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            jobPost.setUpvotes(newUpvotes);
+                            notifyItemChanged(position);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "Failed to update upvote", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(context, "Error: Document ID is null", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    // Method to update upvote count in Firebase
-    public void updateUpvoteCount(final int position) {
-        JobPost jobPost = jobPosts.get(position);
-        int newUpvotes = jobPost.getUpvotes() + 1;
-        jobPost.setUpvotes(newUpvotes);
-        db.collection("job_posts").document(jobPost.getId()).update("upvotes", newUpvotes)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Upvote count updated successfully");
-                        notifyDataSetChanged(); // Refresh the UI after successful upvote
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Error updating upvote count: " + e.getMessage());
-                        // Handle failure
-                    }
-                });
-    }
 }

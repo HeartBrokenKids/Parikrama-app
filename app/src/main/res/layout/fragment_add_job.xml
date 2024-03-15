@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/editTextContactInfo"
         android:layout_marginTop="16dp"
-        android:text="Add Job" />
+        android:text="Request Opportunities" />
 
     <!-- FloatingActionButton (Back Button) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton

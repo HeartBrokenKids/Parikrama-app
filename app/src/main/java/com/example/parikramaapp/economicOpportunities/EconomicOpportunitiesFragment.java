@@ -69,8 +69,10 @@ public class EconomicOpportunitiesFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        jobPostList.clear(); // Clear the list before adding new items
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             JobPost jobPost = documentSnapshot.toObject(JobPost.class);
+                            jobPost.setId(documentSnapshot.getId()); // Set the document ID
                             jobPostList.add(jobPost);
                         }
                         adapter.notifyDataSetChanged();
@@ -83,6 +85,7 @@ public class EconomicOpportunitiesFragment extends Fragment {
                     }
                 });
     }
+
 
 
     private void navigateToAddJobFragment() {

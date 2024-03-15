@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Added TextView for displaying chat messages -->
+    <!-- Chat output TextView -->
     <TextView
         android:id="@+id/chat_output"
         android:layout_width="match_parent"
@@ -17,8 +17,10 @@
         android:hint="Feeling adventurous? Wanderlust AI is here to help!"
         android:minLines="4"
         android:paddingStart="10dp"
-        android:paddingEnd="10dp"/>
+        android:paddingEnd="10dp"
+        android:elevation="2dp" />
 
+    <!-- ScrollView for chat container -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -29,10 +31,12 @@
             android:id="@+id/chat_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:padding="8dp" />
 
     </ScrollView>
 
+    <!-- Input EditText and Send Button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,14 +50,22 @@
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_background"
             android:hint="Speak your mind here"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:textColor="@android:color/black"
+            android:elevation="2dp" />
 
         <Button
             android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Send"
-            android:layout_marginStart="8dp"/>
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:elevation="2dp" />
     </LinearLayout>
 
 </LinearLayout>
