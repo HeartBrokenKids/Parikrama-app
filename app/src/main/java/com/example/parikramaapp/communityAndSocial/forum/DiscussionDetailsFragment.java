@@ -30,10 +30,9 @@ public class DiscussionDetailsFragment extends Fragment {
 
     private String mForumId;
     private String mDiscussionId;
-    private TextView textViewDiscussionTitle;
-    private TextView textViewDiscussionContent;
-    private TextView textViewComments;
+    private TextView textViewDiscussionTitle, textViewDiscussionContent, textViewComments;
     private List<String> mComments = new ArrayList<>();
+
 
     public DiscussionDetailsFragment() {
         // Required empty public constructor
@@ -54,12 +53,9 @@ public class DiscussionDetailsFragment extends Fragment {
         if (getArguments() != null) {
             mForumId = getArguments().getString(ARG_FORUM_ID);
             mDiscussionId = getArguments().getString(ARG_DISCUSSION_ID);
-            // Fetch discussion details based on the discussion ID
-            fetchDiscussionDetails(mForumId, mDiscussionId);
-            // Fetch comments for the discussion
-            fetchComments(mForumId, mDiscussionId);
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,10 +72,20 @@ public class DiscussionDetailsFragment extends Fragment {
         textViewDiscussionTitle = view.findViewById(R.id.textViewDiscussionTitle);
         textViewDiscussionContent = view.findViewById(R.id.textViewDiscussionContent);
         textViewComments = view.findViewById(R.id.textViewComments);
+
+        if (mForumId != null && mDiscussionId != null) {
+            Log.d("DiscussionDetails", "Fetching details for forumId: " + mForumId + " and discussionId: " + mDiscussionId);
+            fetchDiscussionDetails(mForumId, mDiscussionId);
+            fetchComments(mForumId, mDiscussionId);
+        } else {
+            Log.e("DiscussionDetails", "The forumId or discussionId is not provided.");
+            Toast.makeText(getContext(), "Error: The forumId or discussionId is missing.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void fetchDiscussionDetails(String forumId, String discussionId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Log.d("DiscussionDetails", "Attempting to fetch discussion details from Firestore");
         db.collection("forums").document(forumId).collection("discussions").document(discussionId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -88,16 +94,17 @@ public class DiscussionDetailsFragment extends Fragment {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
+                                Log.d("DiscussionDetails", "Discussion details found: " + document.getData());
                                 String title = document.getString("title");
                                 String content = document.getString("content");
                                 // Update UI with fetched details
                                 updateDiscussionDetailsUI(title, content);
                             } else {
-                                // Document does not exist
+                                Log.e("DiscussionDetails", "No discussion details found in document.");
                                 Toast.makeText(getContext(), "Discussion not found", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            // Error fetching document
+                            Log.e("DiscussionDetails", "Error fetching discussion details", task.getException());
                             Toast.makeText(getContext(), "Error fetching discussion details", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -106,6 +113,7 @@ public class DiscussionDetailsFragment extends Fragment {
 
     private void fetchComments(String forumId, String discussionId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Log.d("DiscussionDetails", "Attempting to fetch comments from Firestore");
         db.collection("forums").document(forumId).collection("discussions").document(discussionId).collection("comments")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -113,23 +121,23 @@ public class DiscussionDetailsFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             mComments.clear(); // Clear previous comments
+                            Log.d("DiscussionDetails", "Comments fetched successfully");
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                String comment = document.getString("comment");
-                                // Add comment to the list
+                                Log.d("DiscussionDetails", "Comment: " + document.getData());
+                                String comment = document.getString("content");
                                 if (comment != null) {
                                     mComments.add(comment);
                                 }
                             }
-                            // Update UI with comments
                             updateCommentsUI();
                         } else {
-                            // Error fetching comments
                             Log.e("DiscussionDetails", "Error fetching comments", task.getException());
                             Toast.makeText(getContext(), "Error fetching comments", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
+
 
     private void updateDiscussionDetailsUI(String title, String content) {
         // Set discussion details in TextViews

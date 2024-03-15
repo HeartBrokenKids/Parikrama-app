@@ -107,7 +107,7 @@ public class ForumFragment extends Fragment {
     private void navigateToDiscussionFragment(String forumId) {
         DiscussionFragment discussionFragment = DiscussionFragment.newInstance(forumId);
         getFragmentManager().beginTransaction()
-                .replace(R.id.forums_container, discussionFragment)
+                .replace(R.id.fragment_container, discussionFragment)
                 .addToBackStack(null)
                 .commit();
     }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,13 +26,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class DiscussionFragment extends Fragment {
-
-    private ListView listViewDiscussions;
     private FirebaseFirestore db;
     private ArrayList<String> discussionTitles;
     private ArrayList<String> discussionIds;
     private RecyclerView recyclerViewDiscussions;
     private DiscussionAdapter adapter;
+    private String forumId;
 
     public DiscussionFragment() {
         // Required empty public constructor
@@ -50,6 +50,10 @@ public class DiscussionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_discussion, container, false);
 
+        if (getArguments() != null) {
+            forumId = getArguments().getString("forumId"); // Retrieve forumId here
+        }
+
         recyclerViewDiscussions = rootView.findViewById(R.id.recyclerViewDiscussions);
         recyclerViewDiscussions.setLayoutManager(new LinearLayoutManager(getContext()));
         db = FirebaseFirestore.getInstance();
@@ -62,8 +66,7 @@ public class DiscussionFragment extends Fragment {
         // Set click listener
         adapter.setClickListener(new DiscussionAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                String discussionId = adapter.getItem(position);
+            public void onItemClick(String discussionId) {
                 openDiscussionDetailsFragment(discussionId);
             }
         });
@@ -72,6 +75,25 @@ public class DiscussionFragment extends Fragment {
         fetchDiscussions();
 
         return rootView;
+    }
+    private void openDiscussionDetailsFragment(String discussionId) {
+        if (forumId != null && !forumId.isEmpty()) {
+            DiscussionDetailsFragment fragment = DiscussionDetailsFragment.newInstance(forumId, discussionId);
+
+            // Begin a fragment transaction.
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack so the user can navigate back.
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.addToBackStack(null);
+
+            // Commit the transaction.
+            transaction.commit();
+        } else {
+            Toast.makeText(getContext(), "Error: Forum ID is not available.", Toast.LENGTH_SHORT).show();
+            Log.e("DiscussionFragment", "Error: Forum ID is not provided or is empty.");
+        }
     }
 
     private void fetchDiscussions() {
@@ -99,26 +121,6 @@ public class DiscussionFragment extends Fragment {
                     });
         } else {
             Toast.makeText(getContext(), "Forum ID is null", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-
-
-    private void openDiscussionDetailsFragment(String discussionId) {
-        // Get the selected forum ID again from arguments to pass along with discussion ID
-        String forumId = getArguments() != null ? getArguments().getString("forumId") : "";
-
-        // Check if the forum ID is not null or empty
-        if (forumId != null && !forumId.isEmpty()) {
-            DiscussionDetailsFragment fragment = DiscussionDetailsFragment.newInstance(forumId, discussionId);
-            // Navigate to the DiscussionDetailsFragment
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.forums_container, fragment)
-                    .addToBackStack(null)
-                    .commit();
-        } else {
-            Toast.makeText(getContext(), "Error: Forum ID is not available.", Toast.LENGTH_SHORT).show();
         }
     }
 }

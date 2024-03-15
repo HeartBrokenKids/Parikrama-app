@@ -6,7 +6,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
-import com.example.parikramaapp.communityAndSocial.CommunityMainFragment;
+import com.example.parikramaapp.communityAndSocial.forum.DiscussionFragment;
+import com.example.parikramaapp.communityAndSocial.forum.ForumFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Create instance of your fragment
-        CommunityMainFragment communityFragment = new CommunityMainFragment();
+        ForumFragment forumFragment = new ForumFragment();
 
         // Get fragment manager
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Replace the content of the container with your fragment
-        fragmentTransaction.replace(R.id.fragment_container, communityFragment);
+        fragmentTransaction.replace(R.id.fragment_container, forumFragment);
 
         // Commit the transaction
         fragmentTransaction.commit();
