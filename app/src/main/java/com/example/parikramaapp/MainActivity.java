@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.example.parikramaapp.explore.ChatBotFragment;
 import com.example.parikramaapp.home.homeFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.action_home) {
                 fragment = new homeFragment(); // Replace with actual fragment initialization
             } else if (id == R.id.action_explore) {
-                fragment = new exploreFragment(); // Replace with actual fragment initialization
+                fragment = new ChatBotFragment(); // Replace with actual fragment initialization
             } else if (id == R.id.action_profile) {
                 fragment = new profileFragment(); // Replace with actual fragment initialization
             }
