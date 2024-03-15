@@ -26,7 +26,7 @@ public class EconomicOpportunitiesFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private JobPostAdapter adapter;
-    private List<JobPost> jobPostList; // Use List<JobPost> instead of List<Job>
+    private List<JobPost> jobPostList;
     private FirebaseFirestore db;
 
     public EconomicOpportunitiesFragment() {
@@ -42,13 +42,13 @@ public class EconomicOpportunitiesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        jobPostList = new ArrayList<>(); // Initialize with JobPost type
-        adapter = new JobPostAdapter(jobPostList, getContext()); // Pass JobPost list
+        jobPostList = new ArrayList<>();
+        adapter = new JobPostAdapter(jobPostList, getContext());
         recyclerView.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
 
-        fetchJobPosts(); // Update method name to fetchJobPosts()
+        fetchJobPosts();
 
         return rootView;
     }
@@ -60,8 +60,8 @@ public class EconomicOpportunitiesFragment extends Fragment {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            JobPost jobPost = documentSnapshot.toObject(JobPost.class); // Assuming JobPost is the correct model class
-                            jobPostList.add(jobPost); // Add JobPost objects to the list
+                            JobPost jobPost = documentSnapshot.toObject(JobPost.class);
+                            jobPostList.add(jobPost);
                         }
                         adapter.notifyDataSetChanged();
                     }

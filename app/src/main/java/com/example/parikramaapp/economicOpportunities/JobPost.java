@@ -4,15 +4,19 @@ public class JobPost {
     private String title;
     private String userId;
     private String description;
-    private int upvotes; // Add upvotes field
+    private int upvotes;
     private String contactInfo;
 
+    public JobPost() {
+        // Default constructor required for Firestore
+    }
+
     // Constructor with all fields
-    public JobPost(String title, String description, int upvotes, String userId, String contactInfo) {
+    public JobPost(String title, String userId, String description, int upvotes, String contactInfo) {
         this.title = title;
+        this.userId = userId;
         this.description = description;
         this.upvotes = upvotes;
-        this.userId = userId;
         this.contactInfo = contactInfo;
     }
 
