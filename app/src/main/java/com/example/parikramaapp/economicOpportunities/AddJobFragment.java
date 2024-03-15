@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.parikramaapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -44,6 +45,16 @@ public class AddJobFragment extends Fragment {
         editTextDescription = rootView.findViewById(R.id.editTextDescription);
         editTextContactInfo = rootView.findViewById(R.id.editTextContactInfo);
         btnAddJob = rootView.findViewById(R.id.btnAddJob);
+        FloatingActionButton fabBack = rootView.findViewById(R.id.fabBack);
+
+        // Set OnClickListener to handle back navigation
+        fabBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate back to EconomicOpportunitiesFragment
+                getParentFragmentManager().popBackStack();
+            }
+        });
 
         btnAddJob.setOnClickListener(new View.OnClickListener() {
             @Override

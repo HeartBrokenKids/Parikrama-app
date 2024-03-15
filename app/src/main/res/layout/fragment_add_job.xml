@@ -1,11 +1,9 @@
-<!-- fragment_add_job.xml -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- EditTexts and Button -->
     <EditText
         android:id="@+id/editTextTitle"
         android:layout_width="match_parent"
@@ -16,6 +14,7 @@
         android:id="@+id/editTextDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/editTextTitle"
         android:layout_marginTop="8dp"
         android:hint="Description"
         android:inputType="textMultiLine"
@@ -25,6 +24,7 @@
         android:id="@+id/editTextContactInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/editTextDescription"
         android:layout_marginTop="8dp"
         android:hint="Contact Info" />
 
@@ -32,7 +32,20 @@
         android:id="@+id/btnAddJob"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/editTextContactInfo"
         android:layout_marginTop="16dp"
         android:text="Add Job" />
 
-</LinearLayout>
+    <!-- FloatingActionButton (Back Button) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Back" />
+
+</RelativeLayout>
