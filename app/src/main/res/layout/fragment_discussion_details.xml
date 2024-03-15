@@ -57,11 +57,20 @@
         </LinearLayout>
     </ScrollView>
 
+    <!-- EditText for user to add a comment -->
+    <EditText
+        android:id="@+id/editTextUserComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Write a comment..."
+        android:layout_marginBottom="8dp"
+        android:padding="8dp"/>
+
+    <!-- Button for posting the comment -->
     <Button
         android:id="@+id/buttonPostComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Post a Comment"
-        android:layout_marginTop="8dp"/>
+        android:text="Post Comment"/>
 
 </LinearLayout>

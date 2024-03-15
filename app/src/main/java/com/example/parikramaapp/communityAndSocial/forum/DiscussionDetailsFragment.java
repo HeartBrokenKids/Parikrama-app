@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,14 +16,19 @@ import androidx.fragment.app.Fragment;
 
 import com.example.parikramaapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DiscussionDetailsFragment extends Fragment {
 
@@ -31,6 +38,8 @@ public class DiscussionDetailsFragment extends Fragment {
     private String mForumId;
     private String mDiscussionId;
     private TextView textViewDiscussionTitle, textViewDiscussionContent, textViewComments;
+    private EditText editTextUserComment;
+    private Button buttonPostComment;
     private List<String> mComments = new ArrayList<>();
 
 
@@ -80,6 +89,55 @@ public class DiscussionDetailsFragment extends Fragment {
         } else {
             Log.e("DiscussionDetails", "The forumId or discussionId is not provided.");
             Toast.makeText(getContext(), "Error: The forumId or discussionId is missing.", Toast.LENGTH_SHORT).show();
+        }
+
+        editTextUserComment = view.findViewById(R.id.editTextUserComment);
+        buttonPostComment = view.findViewById(R.id.buttonPostComment);
+
+        // Set up the button click listener
+        buttonPostComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postComment();
+            }
+        });
+    }
+
+    private void postComment() {
+        String commentText = editTextUserComment.getText().toString().trim();
+        if (!commentText.isEmpty()) {
+            // Get the current timestamp or any other necessary data
+            Map<String, Object> commentData = new HashMap<>();
+            commentData.put("content", commentText);
+            // Add your own logic to add fields like timestamp, userID, etc.
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("forums")
+                    .document(mForumId)
+                    .collection("discussions")
+                    .document(mDiscussionId)
+                    .collection("comments")
+                    .add(commentData)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d("DiscussionDetails", "Comment added with ID: " + documentReference.getId());
+                            Toast.makeText(getContext(), "Comment posted", Toast.LENGTH_SHORT).show();
+
+                            // Clear the EditText and refresh comments
+                            editTextUserComment.setText("");
+                            fetchComments(mForumId, mDiscussionId);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("DiscussionDetails", "Error adding comment", e);
+                            Toast.makeText(getContext(), "Comment could not be posted", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(getContext(), "Comment is empty", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class DiscussionFragment extends Fragment {
+public class DiscussionFragment extends Fragment implements AddDiscussionBottomSheet.DiscussionCreationListener{
     private FirebaseFirestore db;
     private ArrayList<String> discussionTitles;
     private ArrayList<String> discussionIds;
@@ -54,6 +55,14 @@ public class DiscussionFragment extends Fragment {
             forumId = getArguments().getString("forumId"); // Retrieve forumId here
         }
 
+        Button newDiscussionButton = rootView.findViewById(R.id.buttonPostComment);
+        newDiscussionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNewDiscussionBottomSheet();
+            }
+        });
+
         recyclerViewDiscussions = rootView.findViewById(R.id.recyclerViewDiscussions);
         recyclerViewDiscussions.setLayoutManager(new LinearLayoutManager(getContext()));
         db = FirebaseFirestore.getInstance();
@@ -76,6 +85,13 @@ public class DiscussionFragment extends Fragment {
 
         return rootView;
     }
+
+    private void showNewDiscussionBottomSheet() {
+        AddDiscussionBottomSheet newDiscussionBottomSheetDialogFragment = AddDiscussionBottomSheet.newInstance(forumId);
+        newDiscussionBottomSheetDialogFragment.setDiscussionCreationListener(this); // Set the current fragment as the listener
+        newDiscussionBottomSheetDialogFragment.show(getChildFragmentManager(), newDiscussionBottomSheetDialogFragment.getClass().getSimpleName());
+    }
+
     private void openDiscussionDetailsFragment(String discussionId) {
         if (forumId != null && !forumId.isEmpty()) {
             DiscussionDetailsFragment fragment = DiscussionDetailsFragment.newInstance(forumId, discussionId);
@@ -99,6 +115,11 @@ public class DiscussionFragment extends Fragment {
     private void fetchDiscussions() {
         if (getArguments() != null) {
             String forumId = getArguments().getString("forumId");
+
+            // Clear the existing data before fetching new
+            discussionTitles.clear();
+            discussionIds.clear();
+
             db.collection("forums").document(forumId).collection("discussions")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -122,5 +143,11 @@ public class DiscussionFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "Forum ID is null", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    @Override
+    public void onDiscussionCreated() {
+        fetchDiscussions();
     }
 }
