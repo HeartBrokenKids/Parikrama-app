@@ -9,12 +9,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parikramaapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -32,9 +35,17 @@ public class FoodRescueFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_food_rescue, container, false);
+        FloatingActionButton fabAddFoodRescue = view.findViewById(R.id.fabAddFoodRescue);
         recyclerView = view.findViewById(R.id.foodRescueRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
+        fabAddFoodRescue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Navigate to AddFoodRescueCaseFragment
+                navigateToAddFoodRescueFragment();
+            }
+        });
 
         db = FirebaseFirestore.getInstance();
 
@@ -45,6 +56,14 @@ public class FoodRescueFragment extends Fragment {
         loadFoodListings();
 
         return view;
+    }
+
+    private void navigateToAddFoodRescueFragment() {
+         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+         FragmentTransaction transaction = fragmentManager.beginTransaction();
+         transaction.replace(R.id.fragment_container, new AddFoodRescueCaseFragment());
+         transaction.addToBackStack(null);
+         transaction.commit();
     }
 
     private void loadFoodListings() {
