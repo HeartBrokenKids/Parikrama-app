@@ -69,3 +69,8 @@ android {
 
 }}
 
+dependencies {
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'com.google.firebase:firebase-storage:20.3.0'
+}
+
