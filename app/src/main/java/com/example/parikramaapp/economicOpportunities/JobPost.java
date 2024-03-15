@@ -1,6 +1,7 @@
 package com.example.parikramaapp.economicOpportunities;
 
 public class JobPost {
+    private String id; // Add document ID field
     private String title;
     private String userId;
     private String description;
@@ -12,7 +13,8 @@ public class JobPost {
     }
 
     // Constructor with all fields
-    public JobPost(String title, String userId, String description, int upvotes, String contactInfo) {
+    public JobPost(String id, String title, String userId, String description, int upvotes, String contactInfo) {
+        this.id = id;
         this.title = title;
         this.userId = userId;
         this.description = description;
@@ -21,6 +23,14 @@ public class JobPost {
     }
 
     // Getters and setters
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -59,5 +69,10 @@ public class JobPost {
 
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
+    }
+
+    // Method to increment upvotes
+    public void incrementUpvotes() {
+        upvotes++;
     }
 }

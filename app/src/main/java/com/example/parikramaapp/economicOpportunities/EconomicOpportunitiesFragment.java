@@ -84,6 +84,7 @@ public class EconomicOpportunitiesFragment extends Fragment {
                 });
     }
 
+
     private void navigateToAddJobFragment() {
         // Replace the current fragment with AddJobFragment
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
