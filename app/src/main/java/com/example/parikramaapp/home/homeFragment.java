@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parikramaapp.R;
+import com.example.parikramaapp.communityAndSocial.news.LocalNewsFragment;
 import com.example.parikramaapp.localExploration.LocalExplorationFragment;
 
 import java.util.ArrayList;
@@ -150,7 +151,7 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
                     selectedFragment = new LocalExplorationFragment();
                     break;
                 case "Community":
-//                    selectedFragment = new CommunityFragment();
+                    selectedFragment = new LocalNewsFragment();
                     break;
                 case "Economic Opportunity":
 //                    selectedFragment = new EconomicOpportunitiesFragment();
