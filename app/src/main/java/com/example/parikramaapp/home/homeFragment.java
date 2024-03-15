@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.parikramaapp.R;
 import com.example.parikramaapp.communityAndSocial.CommunityMainFragment;
 import com.example.parikramaapp.communityAndSocial.news.LocalNewsFragment;
+import com.example.parikramaapp.economicOpportunities.EconomicOpportunitiesFragment;
 import com.example.parikramaapp.localExploration.LocalExplorationFragment;
 
 import java.util.ArrayList;
@@ -155,7 +156,7 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
                     selectedFragment = new CommunityMainFragment();
                     break;
                 case "Economic Opportunity":
-//                    selectedFragment = new EconomicOpportunitiesFragment();
+                    selectedFragment = new EconomicOpportunitiesFragment();
                     break;
                 default:
                     Toast.makeText(getContext(), "Service not implemented yet.", Toast.LENGTH_SHORT).show();
