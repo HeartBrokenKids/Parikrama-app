@@ -31,7 +31,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_background"
-            android:hint="Type your message here"
+            android:hint="Speak your mind here"
             android:padding="10dp"/>
 
         <Button
@@ -51,7 +51,7 @@
         android:padding="10dp"
         android:textColor="@android:color/black"
         android:background="@drawable/edittext_background"
-        android:hint="Chat output will appear here"
+        android:hint="Feeling adventurous? Wanderlust AI is here to help!"
         android:minLines="4"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"/>

@@ -1,6 +1,5 @@
 package com.example.parikramaapp.explore;
 
-import android.net.wifi.aware.DiscoverySession;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
@@ -11,14 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.example.parikramaapp.CityUtilLocationFetch;
 import com.example.parikramaapp.R;
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +24,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatBotFragment extends Fragment {
+
     private EditText userInput;
     private TextView chatOutput;
     private List<Map<String, String>> messagesList = new ArrayList<>();
@@ -52,21 +51,27 @@ public class ChatBotFragment extends Fragment {
 
         OpenAIApiService openAIInterface = retrofit.create(OpenAIApiService.class);
 
+        // Call the method to get the user's city
+        CityUtilLocationFetch.getUserCity(getContext(), new CityUtilLocationFetch.CityFetchListener() {
+            @Override
+            public void onCityFetched(String city) {
+                // Handle the fetched city here
+                if (!city.equals("Permission not granted")) {
+                    // City fetched successfully, update the initial context message
+                    Map<String, String> initialContextMessage = new HashMap<>();
+                    initialContextMessage.put("role", "system");
+                    initialContextMessage.put("content", "You are a city-based assistant app. Help the user in exploring the city and answering any questions they may have. The city is "+city);
+                    messagesList.add(initialContextMessage);
+                } else {
+                    // Permission not granted, handle it appropriately
+                    appendMessage("User: Location permission not granted");
+                }
+            }
+        });
+
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, String> initialContextMessage = new HashMap<>();
-                initialContextMessage.put("role", "system");
-//                initialContextMessage.put("role", "user");
-                String currentLocationCity = "Mumbai"; // need to get location use case
-                initialContextMessage.put("content", "You are a city-based assistant app. The city is "+currentLocationCity);
-                messagesList.add(initialContextMessage);
-
-//                Map<String, String> userCityMessage = new HashMap<>();
-//                userCityMessage.put("role", "user");
-//                userCityMessage.put("content", currentLocationCity);
-//                messagesList.add(userCityMessage);
-
                 String inputText = userInput.getText().toString();
                 appendMessage("User: " + inputText);
                 Map<String, String> userMessage = new HashMap<>();
@@ -114,7 +119,6 @@ public class ChatBotFragment extends Fragment {
             Log.e(TAG, "Error creating Retrofit call: " + e.getMessage(), e);
         }
     }
-
 
     private void appendMessage(String message) {
         chatOutput.append("\n" + message);
