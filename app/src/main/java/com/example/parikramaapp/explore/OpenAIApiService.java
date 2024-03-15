@@ -14,7 +14,7 @@ public interface OpenAIApiService {
     })
     @POST("v1/chat/completions")
     Call<OpenAIResponse> sendMessage(
-            @Header("Authorization") String OPENAI_API_KEY,
-            @Body Map<String, Object> requestBody
+            @Header("Authorization") String token,
+            @Body OpenAIRequest requestBody
     );
 }

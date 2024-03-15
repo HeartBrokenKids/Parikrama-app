@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.example.parikramaapp.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,10 +55,20 @@ public class ChatBotFragment extends Fragment {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Map<String, String> initialContextMessage = new HashMap<>();
+                initialContextMessage.put("role", "system");
+//                initialContextMessage.put("role", "user");
+                String currentLocationCity = "Mumbai"; // need to get location use case
+                initialContextMessage.put("content", "You are a city-based assistant app. The city is "+currentLocationCity);
+                messagesList.add(initialContextMessage);
+
+//                Map<String, String> userCityMessage = new HashMap<>();
+//                userCityMessage.put("role", "user");
+//                userCityMessage.put("content", currentLocationCity);
+//                messagesList.add(userCityMessage);
+
                 String inputText = userInput.getText().toString();
                 appendMessage("User: " + inputText);
-
-                // Add user input to the messages list
                 Map<String, String> userMessage = new HashMap<>();
                 userMessage.put("role", "user");
                 userMessage.put("content", inputText);
@@ -73,21 +84,21 @@ public class ChatBotFragment extends Fragment {
         return view;
     }
 
-    private void sendRequestToOpenAI(List<Map<String, String>> messagesList,OpenAIApiService openAIInterface
-) {
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", "gpt-3.5-turbo");
-        requestBody.put("messages", messagesList);
+    private void sendRequestToOpenAI(List<Map<String, String>> messagesList, OpenAIApiService openAIInterface) {
+        // Create an instance of OpenAIRequest with the model and messages list
+        OpenAIRequest openAIRequest = new OpenAIRequest("gpt-3.5-turbo", messagesList);
+
         try {
-            Call<OpenAIResponse> call = openAIInterface.sendMessage("Bearer " + OPENAI_API_KEY, requestBody);
-            Log.d(TAG, "Sending message to OpenAI: " + messagesList); // Log sending message
+            // Pass the OpenAIRequest object to the sendMessage method
+            Call<OpenAIResponse> call = openAIInterface.sendMessage("Bearer " + OPENAI_API_KEY, openAIRequest);
+            Log.d(TAG, "Sending message to OpenAI: " + new Gson().toJson(openAIRequest)); // Log sending message
             call.enqueue(new Callback<OpenAIResponse>() {
                 @Override
                 public void onResponse(Call<OpenAIResponse> call, Response<OpenAIResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         OpenAIResponse openAIResponse = response.body();
                         String botResponse = openAIResponse.getGeneratedText(); // using getGeneratedText method
-                        appendMessage("Bot: " + botResponse);
+                        appendMessage("Wanderlust AI: " + botResponse);
                         Log.d(TAG, "Received response from OpenAI: " + botResponse); // Log received response
                     } else {
                         Log.e(TAG, "Error: " + response.message());
@@ -99,10 +110,9 @@ public class ChatBotFragment extends Fragment {
                     Log.e(TAG, "Error sending message to OpenAI: " + t.getMessage(), t);
                 }
             });
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, "Error creating Retrofit call: " + e.getMessage(), e);
         }
-
     }
 
 

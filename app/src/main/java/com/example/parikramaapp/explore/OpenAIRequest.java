@@ -5,11 +5,11 @@ import java.util.Map;
 
 public class OpenAIRequest {
     private String model;
-    private List<Map<String, String>> messagesList;
+    private List<Map<String, String>> messages;
 
-    public OpenAIRequest(String model, List<Map<String, String>> messagesList) {
-        this.model = model; // Use the value passed to the constructor
-        this.messagesList = messagesList;
+    public OpenAIRequest(String model, List<Map<String, String>> messages) {
+        this.model = model;
+        this.messages = messages;
     }
 
     public String getModel() {
@@ -17,6 +17,6 @@ public class OpenAIRequest {
     }
 
     public List<Map<String, String>> getMessagesList() {
-        return messagesList;
+        return messages;
     }
 }
