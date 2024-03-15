@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parikramaapp.R;
+import com.example.parikramaapp.localExploration.LocalExplorationFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -132,11 +133,42 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
     @Override
     public void onItemClick(View view, int position) {
         serviceItem clickedItem = adapter.getCurrentItem(position);
+        Fragment selectedFragment = null;
+
         if (clickedItem != null) {
-            Toast.makeText(getContext(), clickedItem.getTitle(), Toast.LENGTH_SHORT).show();
+            switch (clickedItem.getTitle()) {
+                case "City Services":
+//                    selectedFragment = new CityServicesFragment();
+                    break;
+                case "Food Rescue":
+//                    selectedFragment = new FoodRescueFragment();
+                    break;
+                case "Transportation":
+//                    selectedFragment = new TransportationFragment();
+                    break;
+                case "Local Exploration":
+                    selectedFragment = new LocalExplorationFragment();
+                    break;
+                case "Community":
+//                    selectedFragment = new CommunityFragment();
+                    break;
+                case "Economic Opportunity":
+//                    selectedFragment = new EconomicOpportunitiesFragment();
+                    break;
+                default:
+                    Toast.makeText(getContext(), "Service not implemented yet.", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+            // Perform the fragment transaction if a valid selection was made
+            if (selectedFragment != null) {
+                requireActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selectedFragment)
+                        .addToBackStack(null) // Add transaction to the back stack for navigation
+                        .commit();
+            }
         } else {
             Toast.makeText(getContext(), "Error: Item not found.", Toast.LENGTH_SHORT).show();
         }
     }
-
 }
