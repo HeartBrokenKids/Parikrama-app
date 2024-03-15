@@ -14,13 +14,14 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/textViewTitle"
+            android:id="@+id/tvDiscussionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Forum Title"
+            android:text="Discussion Title"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
 
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
+

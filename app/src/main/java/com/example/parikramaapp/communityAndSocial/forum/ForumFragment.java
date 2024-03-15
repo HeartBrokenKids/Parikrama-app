@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -74,7 +75,8 @@ public class ForumFragment extends Fragment {
                 }
             }
         });
-
+        Button newForumButton = rootView.findViewById(R.id.newforum);
+        newForumButton.setOnClickListener(v -> showNewForumDialog());
 
         fetchForums();
 
@@ -83,17 +85,20 @@ public class ForumFragment extends Fragment {
 
     // Method to fetch forums from Firestore
     private void fetchForums() {
+        db = FirebaseFirestore.getInstance();
         db.collection("forums")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            forumTitles.clear();
+                            forumIds.clear();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String title = document.getString("title");
-                                String forumId = document.getId();
+                                String id = document.getId();
                                 forumTitles.add(title);
-                                forumIds.add(forumId);
+                                forumIds.add(id);
                             }
                             adapter.notifyDataSetChanged();
                         } else {
@@ -103,11 +108,22 @@ public class ForumFragment extends Fragment {
                 });
     }
 
+    private void showNewForumDialog() {
+        NewForumBottomSheetDialogFragment newForumDialog = new NewForumBottomSheetDialogFragment();
+        newForumDialog.setOnDialogDismissListener(new NewForumBottomSheetDialogFragment.OnDialogDismissListener() {
+            @Override
+            public void onDialogDismissed() {
+                fetchForums(); // This will refresh the forums list
+            }
+        });
+        newForumDialog.show(getChildFragmentManager(), newForumDialog.getClass().getSimpleName());
+    }
+
     // Method to navigate to DiscussionFragment and pass selected forum ID
     private void navigateToDiscussionFragment(String forumId) {
         DiscussionFragment discussionFragment = DiscussionFragment.newInstance(forumId);
         getFragmentManager().beginTransaction()
-                .replace(R.id.forums_container, discussionFragment)
+                .replace(R.id.fragment_container, discussionFragment)
                 .addToBackStack(null)
                 .commit();
     }

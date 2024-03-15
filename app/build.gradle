@@ -50,10 +50,7 @@ android {
         implementation 'com.google.android.material:material:1.11.0'
         implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
         implementation 'com.google.firebase:firebase-auth:22.3.1'
-        implementation('com.google.firebase:firebase-firestore:24.10.3') {
-            exclude group: 'com.google.api.grpc', module: 'proto-google-common-protos'
-            exclude group: 'com.google.firebase', module: 'protolite-well-known-types'
-        }
+        implementation 'com.google.firebase:firebase-firestore:24.10.3'
         implementation 'com.squareup.picasso:picasso:2.71828'
         testImplementation 'junit:junit:4.13.2'
         androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -62,7 +59,13 @@ android {
         implementation 'com.google.firebase:firebase-analytics'
         implementation 'com.google.android.gms:play-services-maps:18.2.0'
         implementation 'com.google.android.gms:play-services-location:21.2.0'
-        implementation 'com.google.cloud:google-cloud-translate:2.2.0'
+        implementation ('com.google.cloud:google-cloud-translate:2.2.0'){
+            exclude group: 'com.google.api.grpc', module: 'proto-google-common-protos'
+            exclude group: 'com.google.firebase', module: 'protolite-well-known-types'
+        }
+        implementation 'com.google.android.material:material:1.11.0'
         implementation 'com.squareup.retrofit2:retrofit:2.9.0'
         implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    }}
+
+}}
+
