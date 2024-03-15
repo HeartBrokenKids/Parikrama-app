@@ -123,7 +123,10 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Response response = client.newCall(request).execute();
                 if (response.isSuccessful() && response.body() != null) {
+                    // Moved responseBody declaration inside the try block to ensure proper scope
                     String responseBody = response.body().string();
+                    Log.d("MainActivity", "Response: " + responseBody);
+
                     JSONObject jsonObject = new JSONObject(responseBody);
                     JSONObject currentWeather = jsonObject.getJSONObject("current_weather");
                     double temp = currentWeather.getDouble("temperature");
@@ -140,5 +143,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }
