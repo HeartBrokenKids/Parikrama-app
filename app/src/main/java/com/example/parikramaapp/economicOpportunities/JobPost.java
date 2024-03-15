@@ -60,4 +60,7 @@ public class JobPost {
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
     }
+    public void incrementUpvotes() {
+        upvotes++;
+    }
 }
