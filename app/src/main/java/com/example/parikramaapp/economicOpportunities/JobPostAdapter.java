@@ -1,11 +1,13 @@
 package com.example.parikramaapp.economicOpportunities;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,7 @@ import java.util.List;
 
 public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostViewHolder> {
 
+    private static final String TAG = "JobPostAdapter";
     private List<JobPost> jobPosts;
     private Context context;
     private OnUpvoteClickListener upvoteClickListener;
@@ -71,7 +74,10 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
                 @Override
                 public void onClick(View v) {
                     // Call the upvote method of the adapter passing the position
-                    upvote(getAdapterPosition());
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        upvote(position);
+                    }
                 }
             });
         }
@@ -95,7 +101,7 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
     }
 
     // Method to update upvote count in Firebase
-    public void updateUpvoteCount(int position) {
+    public void updateUpvoteCount(final int position) {
         JobPost jobPost = jobPosts.get(position);
         int newUpvotes = jobPost.getUpvotes() + 1;
         jobPost.setUpvotes(newUpvotes);
@@ -103,12 +109,14 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Upvote count updated successfully");
                         notifyDataSetChanged(); // Refresh the UI after successful upvote
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Error updating upvote count: " + e.getMessage());
                         // Handle failure
                     }
                 });
