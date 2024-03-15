@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parikramaapp.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -19,6 +22,7 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
     private List<JobPost> jobPosts;
     private Context context;
     private OnUpvoteClickListener upvoteClickListener;
+    private FirebaseFirestore db;
 
     public void setOnUpvoteClickListener(OnUpvoteClickListener listener) {
         this.upvoteClickListener = listener;
@@ -27,6 +31,7 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
     public JobPostAdapter(List<JobPost> jobPosts, Context context) {
         this.jobPosts = jobPosts;
         this.context = context;
+        this.db = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -75,6 +80,7 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
             textViewTitle.setText(jobPost.getTitle());
             textViewDescription.setText(jobPost.getDescription());
             textViewContactInfo.setText(jobPost.getContactInfo());
+            btnUpvote.setText("Upvote (" + jobPost.getUpvotes() + ")");
         }
 
         public void upvote(int position) {
@@ -86,5 +92,25 @@ public class JobPostAdapter extends RecyclerView.Adapter<JobPostAdapter.JobPostV
 
     public interface OnUpvoteClickListener {
         void onUpvoteClick(int position);
+    }
+
+    // Method to update upvote count in Firebase
+    public void updateUpvoteCount(int position) {
+        JobPost jobPost = jobPosts.get(position);
+        int newUpvotes = jobPost.getUpvotes() + 1;
+        jobPost.setUpvotes(newUpvotes);
+        db.collection("job_posts").document(jobPost.getId()).update("upvotes", newUpvotes)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        notifyDataSetChanged(); // Refresh the UI after successful upvote
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failure
+                    }
+                });
     }
 }
