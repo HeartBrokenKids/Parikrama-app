@@ -1,8 +1,10 @@
 package com.example.parikramaapp.translate;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.example.parikramaapp.R;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
@@ -84,24 +87,42 @@ public class TranslateFragment extends Fragment {
             ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (result != null && result.size() > 0) {
                 String spokenText = result.get(0);
-                // Here you should send 'spokenText' to translation API and update the 'translatedText' TextView with the translated result.
-                // For simplicity, let's just display the spoken text as the translated text.
-                translatedText.setText(spokenText);
+                // Call the method to translate the spoken text
+                translateText(spokenText);
             }
         }
     }
+
     private void translateText(final String spokenText) {
-        String apiKey = "AIzaSyCDmDM5s9wAvsba2jXovv1WhKCNsmEG6lM";
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                String translatedText = "";
+                try {
+                    String apiKey = "AIzaSyB7xiHtZANrnvxul8jvjNLtbyzHgJMeyos"; // Replace with your Google Cloud API key
 
-        // Initialize the translation service
-        Translate translate = TranslateOptions.newBuilder().setApiKey(apiKey).build().getService();
+                    // Initialize the translation service
+                    Translate translate = TranslateOptions.newBuilder().setApiKey(apiKey).build().getService();
+                    Log.d("spoken - ",spokenText);
+                    // Translate the spoken text with auto detection of source language
+                    Translation translation = translate.translate(spokenText,
+                            Translate.TranslateOption.targetLanguage("hi")); // Hindi as the target language
 
-        // Translate the spoken text
-        Translation translation = translate.translate(spokenText,
-                Translate.TranslateOption.sourceLanguage("en"), // Assuming English as the source language
-                Translate.TranslateOption.targetLanguage("fr")); // Example target language (French)
+                    // Get the translated text
+                    translatedText = translation.getTranslatedText();
+                } catch (Exception e) {
+                    Log.e("TranslateFragment", "Error translating text: " + e.getMessage());
+                }
+                return translatedText;
+            }
 
-        // Update the translatedText TextView with the translated result
-        translatedText.setText(translation.getTranslatedText());
+            @Override
+            protected void onPostExecute(String translatedTexts) {
+                // Update the translatedText TextView with the translated result
+                translatedText.setText(translatedTexts);
+            }
+        }.execute();
     }
+
+
 }

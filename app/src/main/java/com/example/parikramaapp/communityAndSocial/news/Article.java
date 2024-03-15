@@ -6,7 +6,7 @@ public class Article {
     private String imageUrl;
     private String publishedAt;
 
-    public Article(String title, String description, String imageUrl, String publishedAt, String at) {
+    public Article(String title, String description, String imageUrl, String publishedAt) {
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;

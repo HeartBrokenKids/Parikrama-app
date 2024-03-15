@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,38 +17,33 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parikramaapp.R;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class LocalNewsFragment extends Fragment {
 
     private static final int PERMISSION_REQUEST_LOCATION = 1001;
 
     private FusedLocationProviderClient fusedLocationClient;
-    private ListView newsListView;
+    private RecyclerView newsRecyclerView; // Change ListView to RecyclerView
 
     public LocalNewsFragment() {
         // Required empty public constructor
@@ -58,14 +52,16 @@ public class LocalNewsFragment extends Fragment {
     public static LocalNewsFragment newInstance() {
         return new LocalNewsFragment();
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_local_news, container, false);
 
+        newsRecyclerView = rootView.findViewById(R.id.news_recycler_view);
 
-        newsListView = rootView.findViewById(R.id.news_list_view);
+        // Attach a layout manager to the RecyclerView
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
+        newsRecyclerView.setLayoutManager(layoutManager);
 
         // Initialize fusedLocationClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext());
@@ -81,11 +77,11 @@ public class LocalNewsFragment extends Fragment {
         } else {
             // Permission already granted, start location updates
             startLocationUpdates();
-//            loadLocalNews();
         }
 
         return rootView;
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -100,6 +96,21 @@ public class LocalNewsFragment extends Fragment {
             }
         }
     }
+
+    private void updateNewsList(List<Article> articles) {
+        // Check if the RecyclerView and context are not null
+        if (newsRecyclerView != null && getContext() != null) {
+            // Create an adapter with the fetched articles
+            NewsAdapter adapter = new NewsAdapter(getContext());
+            // Set the articles to the adapter
+            adapter.setArticles(articles);
+            // Set the adapter to your RecyclerView
+            newsRecyclerView.setAdapter(adapter);
+        } else {
+            Log.e("LocalNewsFragment", "RecyclerView or context is null");
+        }
+    }
+
 
     private void startLocationUpdates() {
         try {
@@ -120,7 +131,10 @@ public class LocalNewsFragment extends Fragment {
                             // Get user's city from location
                             String userCity = getUserCity(location.getLatitude(), location.getLongitude());
                             // Fetch news for the user's city
-//                            fetchNews(userCity);
+                            fetchNews(userCity);
+
+                            // Remove location updates after receiving the first location result
+                            fusedLocationClient.removeLocationUpdates(this);
                         }
                     }
                 }
@@ -134,7 +148,13 @@ public class LocalNewsFragment extends Fragment {
         }
     }
 
+
     private String getUserCity(double latitude, double longitude) {
+        if (!isAdded()) {
+            // Fragment is not attached to the activity, return a default value or handle the situation accordingly
+            return "Unknown";
+        }
+
         Geocoder geocoder = new Geocoder(requireContext(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
@@ -149,158 +169,46 @@ public class LocalNewsFragment extends Fragment {
         return "Unknown";
     }
 
-//    private void fetchNews(String city) {
-//        Log.d("LocalNewsFragment", "Fetching news for city: " + city);
-//
-//        // Replace YOUR_API_KEY with your actual News API key
-//        String apiKey = "69d6dd6a81fa4b2ca2d88c3459443a42";
-//        String url = "https://newsapi.org/v2/top-headlines?q=" + URLEncoder.encode(city) + "&apiKey=" + apiKey;
-//
-//        new FetchNewsTask().execute(url);
-//    }
+    private void fetchNews(String city) {
+        // Initialize Retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://newsapi.org/v2/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-//    private class FetchNewsTask extends AsyncTask<String, Void, String> {
-//
-//        @Override
-//        protected String doInBackground(String... urls) {
-//            if (urls.length < 1 || urls[0] == null) {
-//                return null;
-//            }
-//
-//            String jsonResponse = null;
-//            HttpURLConnection urlConnection = null;
-//            InputStream inputStream = null;
-//            BufferedReader reader = null;
-//
-//            try {
-//                URL url = new URL(urls[0]);
-//                urlConnection = (HttpURLConnection) url.openConnection();
-//                urlConnection.setRequestMethod("GET");
-//                urlConnection.connect();
-//
-//                inputStream = urlConnection.getInputStream();
-//                StringBuilder builder = new StringBuilder();
-//                if (inputStream != null) {
-//                    reader = new BufferedReader(new InputStreamReader(inputStream));
-//                    String line;
-//                    while ((line = reader.readLine()) != null) {
-//                        builder.append(line);
-//                    }
-//                    jsonResponse = builder.toString();
-//                }
-//            } catch (IOException e) {
-//                Log.e("LocalNewsFragment", "Error retrieving news JSON", e);
-//            } finally {
-//                if (urlConnection != null) {
-//                    urlConnection.disconnect();
-//                }
-//                if (inputStream != null) {
-//                    try {
-//                        inputStream.close();
-//                    } catch (IOException e) {
-//                        Log.e("LocalNewsFragment", "Error closing input stream", e);
-//                    }
-//                }
-//                if (reader != null) {
-//                    try {
-//                        reader.close();
-//                    } catch (IOException e) {
-//                        Log.e("LocalNewsFragment", "Error closing reader", e);
-//                    }
-//                }
-//            }
-//
-//            return jsonResponse;
-//        }
-//
-////        @Override
-////        protected void onPostExecute(String jsonResponse) {
-////            if (jsonResponse != null) {
-////                saveNewsToFile(jsonResponse); // Save the news JSON to a local file
-////                updateNewsList(jsonResponse);
-////            }
-////        }
-//    }
+        // Create the Retrofit service
+        NewsService newsService = retrofit.create(NewsService.class);
 
-//    private void updateNewsList(String jsonResponse) {
-//        try {
-//            JSONObject responseJson = new JSONObject(jsonResponse);
-//            if ("ok".equals(responseJson.getString("status"))) {
-//                JSONArray articlesArray = responseJson.getJSONArray("articles");
-//                List<Article> articles = new ArrayList<>();
-//                for (int i = 0; i < articlesArray.length(); i++) {
-//                    JSONObject articleJson = articlesArray.getJSONObject(i);
-//                    Article article = new Article(
-//                            articleJson.getString("title"),
-//                            articleJson.getString("description"),
-//                            articleJson.getString("url"),
-//                            articleJson.getString("urlToImage"),
-//                            articleJson.getString("publishedAt")
-//                    );
-//                    articles.add(article);
-//                }
-//                // Update the UI with the fetched articles
-//                getActivity().runOnUiThread(() -> {
-//                    NewsAdapter adapter = new NewsAdapter(requireContext(), articles);
-//                    newsListView.setAdapter(adapter);
-//                });
-//            } else {
-//                Log.e("LocalNewsFragment", "News API returned an error: " + responseJson.getString("message"));
-//            }
-//        } catch (JSONException e) {
-//            Log.e("LocalNewsFragment", "Error parsing news JSON", e);
-//        }
-//    }
+        // Define the API key
+        String apiKey = "69d6dd6a81fa4b2ca2d88c3459443a42";
 
-//    private void loadLocalNews() {
-//        String newsJson = readNewsFromFile();
-//        if (!newsJson.isEmpty()) {
-//            updateNewsList(newsJson);
-//        } else {
-//            // If there's no local file, fetch news normally
-//            startLocationUpdates();
-//        }
-//    }
-//    private void saveNewsToFile(String newsJson) {
-//        FileOutputStream fos = null;
-//        try {
-//            fos = requireContext().openFileOutput("local_news.json", Context.MODE_PRIVATE);
-//            fos.write(newsJson.getBytes());
-//            Log.d("LocalNewsFragment", "News saved locally");
-//        } catch (Exception e) {
-//            Log.e("LocalNewsFragment", "Error saving news", e);
-//        } finally {
-//            if (fos != null) {
-//                try {
-//                    fos.close();
-//                } catch (IOException e) {
-//                    Log.e("LocalNewsFragment", "Error closing file output stream", e);
-//                }
-//            }
-//        }
-//    }
-//    private String readNewsFromFile() {
-//        FileInputStream fis = null;
-//        StringBuilder builder = new StringBuilder();
-//        try {
-//            fis = requireContext().openFileInput("local_news.json");
-//            InputStreamReader isr = new InputStreamReader(fis);
-//            BufferedReader reader = new BufferedReader(isr);
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                builder.append(line);
-//            }
-//        } catch (Exception e) {
-//            Log.e("LocalNewsFragment", "Error reading news from file", e);
-//        } finally {
-//            if (fis != null) {
-//                try {
-//                    fis.close();
-//                } catch (IOException e) {
-//                    Log.e("LocalNewsFragment", "Error closing file input stream", e);
-//                }
-//            }
-//        }
-//        return builder.toString();
-//    }
+        // Call the API to fetch news
+        Call<NewsResponse> call = newsService.getTopHeadlines("india", apiKey);
+        Log.d("newsoupt", call.toString());
+        call.enqueue(new Callback<NewsResponse>() {
+            @Override
+            public void onResponse(Call<NewsResponse> call, Response<NewsResponse> response) {
+                if (response.isSuccessful()) {
+                    NewsResponse newsResponse = response.body();
+                    Log.d("newsoupt", newsResponse.toString());
+                    if (newsResponse != null && "ok".equals(newsResponse.getStatus())) {
+                        List<Article> articles = newsResponse.getArticles();
+                        Log.d("newsoupt", articles.toString());
+                        // Update UI with fetched articles
+                        updateNewsList(articles);
+                    } else {
+                        Log.e("LocalNewsFragment", "Error: " + response.message());
+                    }
+                } else {
+                    Log.e("LocalNewsFragment", "Error: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NewsResponse> call, Throwable t) {
+                Log.e("LocalNewsFragment", "Error: " + t.getMessage());
+            }
+        });
+    }
+
 }
