@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.parikramaapp.R;
 
 import java.util.ArrayList;
 
@@ -26,16 +29,40 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
 
     // inflates the row layout from xml when needed
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Ensure this is correctly pointing to your layout file
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_discussion, parent, false);
         return new ViewHolder(view);
     }
 
+    public interface ItemClickListener {
+        void onItemClick(String discussionId);
+    }
+
+
+
     // binds the data to the TextView in each row
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String title = discussionTitles.get(position);
-        holder.myTextView.setText(title);
+        holder.tvDiscussionTitle.setText(title);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mClickListener != null) {
+                    mClickListener.onItemClick(discussionIds.get(position));
+                }
+            }
+        });
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvDiscussionTitle; // Ensure this matches the ID in item_discussion.xml
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            tvDiscussionTitle = itemView.findViewById(R.id.tvDiscussionTitle);
+        }
     }
 
     // total number of rows
@@ -44,21 +71,6 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
         return discussionTitles.size();
     }
 
-    // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            myTextView = itemView.findViewById(android.R.id.text1);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-        }
-    }
 
     // convenience method for getting data at click position
     String getItem(int id) {
@@ -68,10 +80,5 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
-    }
-
-    // parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
     }
 }

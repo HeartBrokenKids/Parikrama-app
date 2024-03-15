@@ -3,21 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Toolbar or ActionBar -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <!-- RecyclerView to display discussions -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewDiscussions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:layout_marginTop="1dp" />
+        android:layout_marginTop="1dp"
+        android:layout_above="@id/buttonPostComment"/>
+
+    <Button
+        android:id="@+id/buttonPostComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="New discussion"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"/>
 
 </RelativeLayout>
