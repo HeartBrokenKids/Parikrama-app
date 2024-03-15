@@ -16,9 +16,9 @@ import com.example.parikramaapp.R;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import com.google.cloud.translate.Translate;
-import com.google.cloud.translate.TranslateOptions;
-import com.google.cloud.translate.Translation;
+//import com.google.cloud.translate.Translate;
+//import com.google.cloud.translate.TranslateOptions;
+//import com.google.cloud.translate.Translation;
 
 public class TranslateFragment extends Fragment {
 
@@ -93,15 +93,15 @@ public class TranslateFragment extends Fragment {
     private void translateText(final String spokenText) {
         String apiKey = "AIzaSyCDmDM5s9wAvsba2jXovv1WhKCNsmEG6lM";
 
-        // Initialize the translation service
-        Translate translate = TranslateOptions.newBuilder().setApiKey(apiKey).build().getService();
-
-        // Translate the spoken text
-        Translation translation = translate.translate(spokenText,
-                Translate.TranslateOption.sourceLanguage("en"), // Assuming English as the source language
-                Translate.TranslateOption.targetLanguage("fr")); // Example target language (French)
-
-        // Update the translatedText TextView with the translated result
-        translatedText.setText(translation.getTranslatedText());
+//        // Initialize the translation service
+//        Translate translate = TranslateOptions.newBuilder().setApiKey(apiKey).build().getService();
+//
+//        // Translate the spoken text
+//        Translation translation = translate.translate(spokenText,
+//                Translate.TranslateOption.sourceLanguage("en"), // Assuming English as the source language
+//                Translate.TranslateOption.targetLanguage("fr")); // Example target language (French)
+//
+//        // Update the translatedText TextView with the translated result
+//        translatedText.setText(translation.getTranslatedText());
     }
 }
