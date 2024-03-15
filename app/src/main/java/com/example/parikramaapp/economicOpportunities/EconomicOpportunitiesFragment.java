@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,6 +51,15 @@ public class EconomicOpportunitiesFragment extends Fragment {
 
         fetchJobPosts();
 
+        // Set OnClickListener for the floating action button
+        rootView.findViewById(R.id.btnAddJob).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to Add Job Fragment
+                navigateToAddJobFragment();
+            }
+        });
+
         return rootView;
     }
 
@@ -72,5 +82,13 @@ public class EconomicOpportunitiesFragment extends Fragment {
                         Toast.makeText(getContext(), "Failed to fetch job posts: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void navigateToAddJobFragment() {
+        // Replace the current fragment with AddJobFragment
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new AddJobFragment());
+        transaction.addToBackStack(null); // Optional: Add to back stack for navigation
+        transaction.commit();
     }
 }
