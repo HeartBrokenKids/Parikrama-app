@@ -1,5 +1,6 @@
 package com.example.parikramaapp.communityAndSocial.forum;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,6 +24,23 @@ public class NewForumBottomSheetDialogFragment extends BottomSheetDialogFragment
 
     private EditText editTextForumTitle, editTextDiscussionTitle, editTextDiscussionContent;
     private Button buttonCreateForum;
+
+    public interface OnDialogDismissListener {
+        void onDialogDismissed();
+    }
+    private OnDialogDismissListener mListener;
+
+    public void setOnDialogDismissListener(OnDialogDismissListener listener) {
+        mListener = listener;
+    }
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (mListener != null) {
+            mListener.onDialogDismissed();
+        }
+    }
+
 
     @Nullable
     @Override
@@ -83,5 +101,6 @@ public class NewForumBottomSheetDialogFragment extends BottomSheetDialogFragment
                     Toast.makeText(getContext(), "Failed to create forum", Toast.LENGTH_SHORT).show();
                 });
     }
+
 }
 

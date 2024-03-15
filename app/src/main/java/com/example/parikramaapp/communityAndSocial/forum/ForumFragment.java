@@ -110,8 +110,13 @@ public class ForumFragment extends Fragment {
 
     private void showNewForumDialog() {
         NewForumBottomSheetDialogFragment newForumDialog = new NewForumBottomSheetDialogFragment();
+        newForumDialog.setOnDialogDismissListener(new NewForumBottomSheetDialogFragment.OnDialogDismissListener() {
+            @Override
+            public void onDialogDismissed() {
+                fetchForums(); // This will refresh the forums list
+            }
+        });
         newForumDialog.show(getChildFragmentManager(), newForumDialog.getClass().getSimpleName());
-        newForumDialog.setOnDismissListener(dialog -> fetchForums());
     }
 
     // Method to navigate to DiscussionFragment and pass selected forum ID
