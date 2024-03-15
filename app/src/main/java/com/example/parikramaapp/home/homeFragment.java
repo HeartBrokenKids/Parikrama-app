@@ -18,6 +18,7 @@ import com.example.parikramaapp.communityAndSocial.CommunityMainFragment;
 import com.example.parikramaapp.communityAndSocial.news.LocalNewsFragment;
 import com.example.parikramaapp.economicOpportunities.EconomicOpportunitiesFragment;
 import com.example.parikramaapp.localExploration.LocalExplorationFragment;
+import com.example.parikramaapp.translate.TranslateFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,12 +71,13 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
 
     private void initializeServicesList() {
         services = Arrays.asList(
-                new serviceItem("City Services", R.drawable.cityserviceicon),
-                new serviceItem("Food Rescue", R.drawable.foodrescueicon),
-                new serviceItem("Transportation", R.drawable.transportationicon),
                 new serviceItem("Local Exploration", R.drawable.localexplorationicon),
+                new serviceItem("Translate", R.drawable.translateicon),
                 new serviceItem("Community", R.drawable.communnityicon),
                 new serviceItem("Economic Opportunity", R.drawable.economicopportunitiesicon),
+                new serviceItem("Transportation", R.drawable.transportationicon),
+                new serviceItem("Food Rescue", R.drawable.foodrescueicon),
+                new serviceItem("City Services", R.drawable.cityserviceicon),
                 new serviceItem("Environment and Health", R.drawable.environmentandhealthicon),
                 new serviceItem("Education", R.drawable.educationicon)
         );
@@ -157,6 +159,9 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
                     break;
                 case "Economic Opportunity":
                     selectedFragment = new EconomicOpportunitiesFragment();
+                    break;
+                case "Translate":
+                    selectedFragment = new TranslateFragment();
                     break;
                 default:
                     Toast.makeText(getContext(), "Service not implemented yet.", Toast.LENGTH_SHORT).show();
