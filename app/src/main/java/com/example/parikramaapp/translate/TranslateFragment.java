@@ -8,13 +8,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import androidx.fragment.app.Fragment;
 
 import com.example.parikramaapp.R;
+
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -26,7 +31,14 @@ import com.google.cloud.translate.Translation;
 public class TranslateFragment extends Fragment {
 
     private static final int SPEECH_REQUEST_CODE = 123;
+    private TextToSpeech textToSpeech;
     private TextView translatedText;
+    private Spinner languageSpinner;
+    private static final String[] LANGUAGES = {
+            "Hindi", "Bengali", "Telugu", "Marathi", "Tamil", "Urdu", "Gujarati", "Kannada", "Odia", "Punjabi","Spanish", "French", "German", "Italian"
+    };
+
+    private Translate translate;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -55,11 +67,42 @@ public class TranslateFragment extends Fragment {
 
         Button speechInputButton = rootView.findViewById(R.id.speechInputButton);
         translatedText = rootView.findViewById(R.id.translatedText);
+        languageSpinner = rootView.findViewById(R.id.languageSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, LANGUAGES);
+        languageSpinner.setAdapter(adapter);
+
+        // Initialize the translation service
+        String apiKey = "AIzaSyB7xiHtZANrnvxul8jvjNLtbyzHgJMeyos"; // Replace with your Google Cloud API key
+        translate = TranslateOptions.newBuilder().setApiKey(apiKey).build().getService();
+
+
 
         speechInputButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startSpeechToText();
+            }
+        });
+        Button speechOutputButton = rootView.findViewById(R.id.speechOutputButton);
+
+        speechOutputButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speakTranslatedText(translatedText.getText().toString());
+            }
+        });
+
+        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = textToSpeech.setLanguage(Locale.getDefault());
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TranslateFragment", "Language not supported");
+                    }
+                } else {
+                    Log.e("TranslateFragment", "Initialization failed");
+                }
             }
         });
 
@@ -94,19 +137,16 @@ public class TranslateFragment extends Fragment {
     }
 
     private void translateText(final String spokenText) {
+        String selectedLanguage = languageSpinner.getSelectedItem().toString();
+        String targetLanguageCode = getLanguageCode(selectedLanguage);
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
                 String translatedText = "";
                 try {
-                    String apiKey = "AIzaSyB7xiHtZANrnvxul8jvjNLtbyzHgJMeyos"; // Replace with your Google Cloud API key
-
-                    // Initialize the translation service
-                    Translate translate = TranslateOptions.newBuilder().setApiKey(apiKey).build().getService();
-                    Log.d("spoken - ",spokenText);
                     // Translate the spoken text with auto detection of source language
                     Translation translation = translate.translate(spokenText,
-                            Translate.TranslateOption.targetLanguage("hi")); // Hindi as the target language
+                            Translate.TranslateOption.targetLanguage(targetLanguageCode));
 
                     // Get the translated text
                     translatedText = translation.getTranslatedText();
@@ -124,5 +164,44 @@ public class TranslateFragment extends Fragment {
         }.execute();
     }
 
+    private void speakTranslatedText(String text) {
+        if (textToSpeech != null) {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "translate");
+        }
+    }
 
+    private String getLanguageCode(String language) {
+        switch (language) {
+            case "Hindi":
+                return "hi";
+            case "Spanish":
+                return "es";
+            case "French":
+                return "fr";
+            case "German":
+                return "de";
+            case "Italian":
+                return "it";
+            case "Bengali":
+                return "bn";
+            case "Telugu":
+                return "te";
+            case "Marathi":
+                return "mr";
+            case "Tamil":
+                return "ta";
+            case "Urdu":
+                return "ur";
+            case "Gujarati":
+                return "gu";
+            case "Kannada":
+                return "kn";
+            case "Odia":
+                return "or";
+            case "Punjabi":
+                return "pa";
+            default:
+                return "en"; // Default to English
+        }
+    }
 }
