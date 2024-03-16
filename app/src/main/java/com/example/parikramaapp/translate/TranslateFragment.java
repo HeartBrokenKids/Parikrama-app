@@ -72,7 +72,7 @@ public class TranslateFragment extends Fragment {
         languageSpinner.setAdapter(adapter);
 
         // Initialize the translation service
-        String apiKey = "AIzaSyB7xiHtZANrnvxul8jvjNLtbyzHgJMeyos"; // Replace with your Google Cloud API key
+        String apiKey = getString(R.string.maps_api_key);
         translate = TranslateOptions.newBuilder().setApiKey(apiKey).build().getService();
 
 
