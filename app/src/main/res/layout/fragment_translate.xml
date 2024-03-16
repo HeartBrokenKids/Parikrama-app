@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,16 +12,34 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"/>
 
+    <!-- Spinner for language selection -->
+    <Spinner
+        android:id="@+id/languageSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/speechInputButton"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"/>
+
     <TextView
         android:id="@+id/translatedText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/speechInputButton"
-        android:layout_marginTop="32dp"
+        android:layout_below="@id/languageSpinner"
+        android:layout_marginTop="16dp"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textAlignment="center"
         android:text="Translated Text Will Appear Here"
         android:padding="16dp"/>
+
+    <Button
+        android:id="@+id/speechOutputButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Speak Translated Text"
+        android:layout_below="@id/translatedText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
 
 </RelativeLayout>
