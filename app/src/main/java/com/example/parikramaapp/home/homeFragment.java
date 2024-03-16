@@ -144,9 +144,9 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
 
         if (clickedItem != null) {
             switch (clickedItem.getTitle()) {
-                case "City Services":
-//                    selectedFragment = new CityServicesFragment();
-                    break;
+//                case "City Services":
+////                    selectedFragment = new CityServicesFragment();
+//                    break;
                 case "Food Rescue":
                     selectedFragment = new FoodRescueFragment();
                     break;
