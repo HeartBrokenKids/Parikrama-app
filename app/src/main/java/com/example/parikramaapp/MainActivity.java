@@ -65,10 +65,11 @@ public class MainActivity extends AppCompatActivity {
         clearLastSelectedIndex();
         checkLocationPermissionAndFetch();
         navigationView.setOnNavigationItemSelectedListener(item -> {
+            Log.d("NAVVV", "onCreate: presssed");
             Fragment fragment = null;
             int id = item.getItemId();
             if (id == R.id.action_home) {
-                fragment = new homeFragment();
+                fragment = HOMEEE(fragment);
             } else if (id == R.id.action_explore) {
                 fragment = new ChatBotFragment();
             } else if (id == R.id.action_profile) {
@@ -81,6 +82,28 @@ public class MainActivity extends AppCompatActivity {
             navigationView.setSelectedItemId(R.id.action_home);
         }
 
+    }
+
+    private Fragment HOMEEE(Fragment fragment2) {
+        Log.d("FRAGG", "HOMEEE: "+fragment2);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (
+                        fragment instanceof FoodRescueFragment ||
+                            fragment instanceof TransportationFragment ||
+                            fragment instanceof LocalExplorationFragment ||
+                            fragment instanceof CommunityMainFragment ||
+                            fragment instanceof EconomicOpportunitiesFragment ||
+                            fragment instanceof TranslateFragment) {
+                Log.d("DEBUGGGGG", "YESS IT IS WORKING");
+                clearLastSelectedIndex();
+                fragment = new homeFragment();
+                return fragment;
+            }
+            else{
+                Log.d("DEBUGGGGG", "YESS IT IS WORKING2222");
+                fragment = new homeFragment();
+                return fragment;
+            }
     }
 
     private void clearLastSelectedIndex() {
@@ -196,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     private void printBackStackEntries() {
         for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); i++) {
