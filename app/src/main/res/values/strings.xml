@@ -3,4 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="upvote_button_text">"Upvote (%1$d)"</string>
+    <string name="news_api_key">"69d6dd6a81fa4b2ca2d88c3459443a42"</string>
+    <string name="openai_api_key">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</string>
+    <string name="maps_api_key">"AIzaSyAVlOm3A8tcE7lML0mgm-eYqEhWEh3IV2U"</string>
 </resources>
