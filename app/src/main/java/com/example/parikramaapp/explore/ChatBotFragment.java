@@ -29,7 +29,7 @@ public class ChatBotFragment extends Fragment {
     private TextView chatOutput;
     private List<Map<String, String>> messagesList = new ArrayList<>();
     private static final String TAG = "ChatBotFragment";
-    private static final String OPENAI_API_KEY = "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";
+    private String OPENAI_API_KEY;
     private static final String OPENAI_API_URL = "https://api.openai.com";
 
     public ChatBotFragment() {
@@ -43,6 +43,7 @@ public class ChatBotFragment extends Fragment {
         userInput = view.findViewById(R.id.user_input);
         chatOutput = view.findViewById(R.id.chat_output);
         Button sendButton = view.findViewById(R.id.send_button);
+        OPENAI_API_KEY = getString(R.string.openai_api_key);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(OPENAI_API_URL)
