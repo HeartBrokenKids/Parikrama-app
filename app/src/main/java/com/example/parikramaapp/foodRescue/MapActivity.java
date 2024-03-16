@@ -2,6 +2,8 @@ package com.example.parikramaapp.foodRescue;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +22,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private Marker marker;
+    private Button selectLocationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        selectLocationButton = findViewById(R.id.selectLocationButton);
+        selectLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Return the selected location to the calling activity (AddFoodRescueCaseFragment)
+                if (marker != null) {
+                    LatLng selectedLatLng = marker.getPosition();
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("latitude", selectedLatLng.latitude);
+                    resultIntent.putExtra("longitude", selectedLatLng.longitude);
+                    setResult(RESULT_OK, resultIntent);
+                }
+                // Close the MapActivity
+                finish();
+            }
+        });
     }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
