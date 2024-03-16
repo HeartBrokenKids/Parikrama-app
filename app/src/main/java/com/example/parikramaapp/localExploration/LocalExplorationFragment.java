@@ -111,7 +111,7 @@ public class LocalExplorationFragment extends Fragment implements OnMapReadyCall
         googleURL.append("&radius=" + ProximityRadius);
         googleURL.append("&type=" + nearbyPlace);
         googleURL.append("&sensor=true");
-        googleURL.append("&key=" + "AIzaSyAVlOm3A8tcE7lML0mgm-eYqEhWEh3IV2U");
+        googleURL.append("&key=" + getString(R.string.maps_api_key));
         return googleURL.toString();
     }
 
