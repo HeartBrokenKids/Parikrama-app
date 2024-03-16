@@ -57,7 +57,7 @@ public class AddFoodRescueCaseFragment extends Fragment {
     private Button uploadButton;
 
     private Uri imageUri;
-    private Calendar expiryDateCalendar; // Added Calendar instance
+    private Calendar expiryDateCalendar;
 
     private FirebaseFirestore db;
     private StorageReference storageRef;
@@ -85,7 +85,6 @@ public class AddFoodRescueCaseFragment extends Fragment {
         selectLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Launch map activity here
                 Intent mapIntent = new Intent(getContext(), MapActivity.class);
                 startActivityForResult(mapIntent, MAP_REQUEST_CODE);
             }
@@ -102,7 +101,7 @@ public class AddFoodRescueCaseFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference("food_rescue_images");
 
-        expiryDateCalendar = Calendar.getInstance(); // Initialize Calendar instance
+        expiryDateCalendar = Calendar.getInstance();
 
         expiryTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +166,6 @@ public class AddFoodRescueCaseFragment extends Fragment {
             double longitude = data.getDoubleExtra("longitude", 0);
             String selectedLocation = latitude + ", " + longitude;
 
-            // Initialize locationEditText before setting its text
             locationEditText = requireView().findViewById(R.id.locationEditText);
             locationEditText.setText(selectedLocation);
         }
@@ -185,7 +183,6 @@ public class AddFoodRescueCaseFragment extends Fragment {
         final String quantity = quantityEditText.getText().toString().trim();
 
         if (imageUri == null) {
-            // Handle the case where no image is selected
             Toast.makeText(getContext(), "Please select an image", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -196,7 +193,6 @@ public class AddFoodRescueCaseFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Once the image is successfully uploaded, get its download URL
                         fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
@@ -221,7 +217,7 @@ public class AddFoodRescueCaseFragment extends Fragment {
                                 foodRescueCase.put("quantity", quantity);
                                 foodRescueCase.put("donor_id", donorId);
                                 foodRescueCase.put("status", status);
-                                foodRescueCase.put("timePosted", timePosted); // Use the timestamp
+                                foodRescueCase.put("timePosted", timePosted);
                                 foodRescueCase.put("imageUrl", imageUrl);
 
                                 db.collection("food_listings")
@@ -230,7 +226,6 @@ public class AddFoodRescueCaseFragment extends Fragment {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
                                                 Toast.makeText(getContext(), "Food rescue case added successfully", Toast.LENGTH_SHORT).show();
-                                                // Clear the form fields after successful upload
                                                 clearFormFields();
                                             }
                                         })
@@ -253,12 +248,11 @@ public class AddFoodRescueCaseFragment extends Fragment {
     }
 
     private void clearFormFields() {
-        // Clear all form fields after successful upload
         titleEditText.setText("");
         descriptionEditText.setText("");
         expiryTimeButton.setText("");
         quantityEditText.setText("");
-        imageView.setImageResource(android.R.color.transparent); // Clear the image view
+        imageView.setImageResource(android.R.color.transparent);
         locationEditText.setText("");
     }
 

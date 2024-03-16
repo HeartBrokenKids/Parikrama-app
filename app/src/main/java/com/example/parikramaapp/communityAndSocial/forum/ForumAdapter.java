@@ -17,12 +17,10 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ForumViewHol
     private ArrayList<String> forumTitles;
     private OnItemClickListener mListener;
 
-    // Interface to handle item clicks
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
-    // Method to set the listener
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
     }
@@ -49,7 +47,6 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ForumViewHol
         return forumTitles.size();
     }
 
-    // ViewHolder class
     public static class ForumViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textViewTitle;
@@ -58,7 +55,6 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ForumViewHol
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
 
-            // Set click listener for the item
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -72,7 +68,6 @@ public class ForumAdapter extends RecyclerView.Adapter<ForumAdapter.ForumViewHol
             });
         }
 
-        // Bind data to the views
         public void bind(String title) {
             textViewTitle.setText(title);
         }

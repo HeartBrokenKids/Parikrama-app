@@ -45,7 +45,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     resultIntent.putExtra("longitude", selectedLatLng.longitude);
                     setResult(RESULT_OK, resultIntent);
                 }
-                // Close the MapActivity
                 finish();
             }
         });
@@ -56,7 +55,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Set default location (e.g., your city or any other preferred location)
         LatLng defaultLocation = new LatLng(37.7749, -122.4194);
         marker = mMap.addMarker(new MarkerOptions().position(defaultLocation).draggable(true));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 12f));
@@ -70,7 +68,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             @Override
             public void onMarkerDragEnd(@NonNull Marker marker) {
-                // Update marker position when the user finishes dragging
                 marker.setPosition(marker.getPosition());
             }
         });
@@ -78,7 +75,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
-                // Update marker position when the user clicks on the map
                 if (marker != null) {
                     marker.setPosition(latLng);
                 } else {
@@ -90,7 +86,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(@NonNull LatLng latLng) {
-                // Update marker position when the user long clicks on the map
                 if (marker != null) {
                     marker.setPosition(latLng);
                 } else {
@@ -102,7 +97,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onBackPressed() {
-        // Pass the selected location back to the calling activity (AddFoodRescueCaseFragment)
         if (marker != null) {
             LatLng selectedLatLng = marker.getPosition();
             Intent resultIntent = new Intent();
@@ -110,7 +104,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             resultIntent.putExtra("longitude", selectedLatLng.longitude);
             setResult(RESULT_OK, resultIntent);
         }
-        // Close the MapActivity
         finish();
         super.onBackPressed();
     }

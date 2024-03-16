@@ -3,7 +3,6 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- EditTexts and Button -->
     <EditText
         android:id="@+id/editTextTitle"
         android:layout_width="match_parent"
@@ -36,7 +35,6 @@
         android:layout_marginTop="16dp"
         android:text="Request Opportunities" />
 
-    <!-- FloatingActionButton (Back Button) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabBack"
         android:layout_width="wrap_content"

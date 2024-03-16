@@ -8,9 +8,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by Coding Cafe on 7/18/2018.
- */
 
 public class DownloadUrl
 {

@@ -6,19 +6,18 @@ import com.google.firebase.firestore.GeoPoint;
 public class FoodListing {
     private String title;
     private String description;
-    private GeoPoint location; // For lat, long coordinates
+    private GeoPoint location;
     private Timestamp expiryTime;
-    private String quantity; // Modified quantity to be a string
+    private String quantity;
     private String donorId;
     private Timestamp timePosted;
     private String status;
     private String imageUrl;
 
     public FoodListing() {
-        // Empty constructor needed for Firestore
+
     }
 
-    // Title
     public String getTitle() {
         return title;
     }
@@ -27,7 +26,6 @@ public class FoodListing {
         this.title = title;
     }
 
-    // Description
     public String getDescription() {
         return description;
     }
@@ -36,7 +34,6 @@ public class FoodListing {
         this.description = description;
     }
 
-    // Location
     public GeoPoint getLocation() {
         return location;
     }
@@ -45,7 +42,6 @@ public class FoodListing {
         this.location = location;
     }
 
-    // ExpiryTime
     public Timestamp getExpiryTime() {
         return expiryTime;
     }
@@ -54,7 +50,6 @@ public class FoodListing {
         this.expiryTime = expiryTime;
     }
 
-    // Quantity
     public String getQuantity() {
         return quantity;
     }
@@ -63,7 +58,6 @@ public class FoodListing {
         this.quantity = quantity;
     }
 
-    // DonorId
     public String getDonorId() {
         return donorId;
     }
@@ -72,7 +66,6 @@ public class FoodListing {
         this.donorId = donorId;
     }
 
-    // TimePosted
     public Timestamp getTimePosted() {
         return timePosted;
     }
@@ -81,7 +74,6 @@ public class FoodListing {
         this.timePosted = timePosted;
     }
 
-    // Status
     public String getStatus() {
         return status;
     }
@@ -90,7 +82,6 @@ public class FoodListing {
         this.status = status;
     }
 
-    // ImageUrl
     public String getImageUrl() {
         return imageUrl;
     }

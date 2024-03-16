@@ -12,7 +12,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"/>
 
-    <!-- Spinner for language selection -->
     <Spinner
         android:id="@+id/languageSpinner"
         android:layout_width="wrap_content"

@@ -44,7 +44,6 @@ public class DiscussionDetailsFragment extends Fragment {
 
 
     public DiscussionDetailsFragment() {
-        // Required empty public constructor
     }
 
     public static DiscussionDetailsFragment newInstance(String forumId, String discussionId) {
@@ -69,7 +68,6 @@ public class DiscussionDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_discussion_details, container, false);
     }
 
@@ -77,7 +75,6 @@ public class DiscussionDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize views
         textViewDiscussionTitle = view.findViewById(R.id.textViewDiscussionTitle);
         textViewDiscussionContent = view.findViewById(R.id.textViewDiscussionContent);
         textViewComments = view.findViewById(R.id.textViewComments);
@@ -94,7 +91,6 @@ public class DiscussionDetailsFragment extends Fragment {
         editTextUserComment = view.findViewById(R.id.editTextUserComment);
         buttonPostComment = view.findViewById(R.id.buttonPostComment);
 
-        // Set up the button click listener
         buttonPostComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,10 +102,8 @@ public class DiscussionDetailsFragment extends Fragment {
     private void postComment() {
         String commentText = editTextUserComment.getText().toString().trim();
         if (!commentText.isEmpty()) {
-            // Get the current timestamp or any other necessary data
             Map<String, Object> commentData = new HashMap<>();
             commentData.put("content", commentText);
-            // Add your own logic to add fields like timestamp, userID, etc.
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("forums")
@@ -155,7 +149,6 @@ public class DiscussionDetailsFragment extends Fragment {
                                 Log.d("DiscussionDetails", "Discussion details found: " + document.getData());
                                 String title = document.getString("title");
                                 String content = document.getString("content");
-                                // Update UI with fetched details
                                 updateDiscussionDetailsUI(title, content);
                             } else {
                                 Log.e("DiscussionDetails", "No discussion details found in document.");

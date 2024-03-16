@@ -1,4 +1,3 @@
-<!-- item_news_article.xml -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,7 +8,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/common_full_open_on_phone" /> <!-- Use a placeholder image -->
+        android:src="@drawable/common_full_open_on_phone" />
 
     <TextView
         android:id="@+id/title_text_view"

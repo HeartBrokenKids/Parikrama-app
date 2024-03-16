@@ -31,7 +31,6 @@ public class AddJobFragment extends Fragment {
     private Button btnAddJob;
 
     public AddJobFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -47,11 +46,9 @@ public class AddJobFragment extends Fragment {
         btnAddJob = rootView.findViewById(R.id.btnAddJob);
         FloatingActionButton fabBack = rootView.findViewById(R.id.fabBack);
 
-        // Set OnClickListener to handle back navigation
         fabBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate back to EconomicOpportunitiesFragment
                 getParentFragmentManager().popBackStack();
             }
         });
@@ -71,30 +68,25 @@ public class AddJobFragment extends Fragment {
         String description = editTextDescription.getText().toString().trim();
         String contactInfo = editTextContactInfo.getText().toString().trim();
 
-        // Check if any of the fields are empty
         if (title.isEmpty() || description.isEmpty() || contactInfo.isEmpty()) {
             Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Assuming you have a way to get the userId, replace "your_user_id" with the actual userId
-        String userId = "your_user_id"; // Replace this with the actual userId
+        String userId = "your_user_id";
 
-        // Create a HashMap to hold the job post data
         Map<String, Object> jobPost = new HashMap<>();
         jobPost.put("userId", userId);
         jobPost.put("title", title);
         jobPost.put("description", description);
-        jobPost.put("upvotes", 0); // Assuming initial upvotes are 0
+        jobPost.put("upvotes", 0);
         jobPost.put("contactInfo", contactInfo);
 
-        // Add the job post to Firestore
         db.collection("job_posts").add(jobPost)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Toast.makeText(getContext(), "Job added successfully", Toast.LENGTH_SHORT).show();
-                        // Clear the input fields after successful addition
                         editTextTitle.setText("");
                         editTextDescription.setText("");
                         editTextContactInfo.setText("");

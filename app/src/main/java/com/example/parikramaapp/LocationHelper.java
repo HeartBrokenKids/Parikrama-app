@@ -16,7 +16,7 @@ public class LocationHelper {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses != null && addresses.size() > 0) {
                 Address address = addresses.get(0);
-                return address.getLocality(); // Returns the city name
+                return address.getLocality();
             }
         } catch (IOException e) {
             e.printStackTrace();

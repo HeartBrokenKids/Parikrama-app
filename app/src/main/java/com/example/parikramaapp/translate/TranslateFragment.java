@@ -47,7 +47,6 @@ public class TranslateFragment extends Fragment {
     private String mParam2;
 
     public TranslateFragment() {
-        // Required empty public constructor
     }
 
     public static TranslateFragment newInstance(String param1, String param2) {
@@ -62,7 +61,6 @@ public class TranslateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_translate, container, false);
 
         Button speechInputButton = rootView.findViewById(R.id.speechInputButton);
@@ -71,8 +69,7 @@ public class TranslateFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, LANGUAGES);
         languageSpinner.setAdapter(adapter);
 
-        // Initialize the translation service
-        String apiKey = getString(R.string.maps_api_key);
+        String apiKey = getString(R.string.translation_api_key);
         translate = TranslateOptions.newBuilder().setApiKey(apiKey).build().getService();
 
 
@@ -130,7 +127,6 @@ public class TranslateFragment extends Fragment {
             ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             if (result != null && result.size() > 0) {
                 String spokenText = result.get(0);
-                // Call the method to translate the spoken text
                 translateText(spokenText);
             }
         }
@@ -144,11 +140,9 @@ public class TranslateFragment extends Fragment {
             protected String doInBackground(Void... voids) {
                 String translatedText = "";
                 try {
-                    // Translate the spoken text with auto detection of source language
                     Translation translation = translate.translate(spokenText,
                             Translate.TranslateOption.targetLanguage(targetLanguageCode));
 
-                    // Get the translated text
                     translatedText = translation.getTranslatedText();
                 } catch (Exception e) {
                     Log.e("TranslateFragment", "Error translating text: " + e.getMessage());
@@ -158,7 +152,6 @@ public class TranslateFragment extends Fragment {
 
             @Override
             protected void onPostExecute(String translatedTexts) {
-                // Update the translatedText TextView with the translated result
                 translatedText.setText(translatedTexts);
             }
         }.execute();
@@ -201,7 +194,7 @@ public class TranslateFragment extends Fragment {
             case "Punjabi":
                 return "pa";
             default:
-                return "en"; // Default to English
+                return "en";
         }
     }
 }

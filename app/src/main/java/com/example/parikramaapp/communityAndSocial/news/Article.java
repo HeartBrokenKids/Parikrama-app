@@ -13,7 +13,6 @@ public class Article {
         this.publishedAt = publishedAt;
     }
 
-    // Getters and setters for all fields
     public String getTitle() {
         return title;
     }

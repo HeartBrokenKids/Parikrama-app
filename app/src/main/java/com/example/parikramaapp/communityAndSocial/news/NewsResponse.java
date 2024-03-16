@@ -5,7 +5,6 @@ public class NewsResponse {
     private String status;
     private List<Article> articles;
 
-    // Getter methods
     public String getStatus() {
         return status;
     }

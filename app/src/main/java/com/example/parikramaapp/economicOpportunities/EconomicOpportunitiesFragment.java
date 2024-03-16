@@ -51,11 +51,9 @@ public class EconomicOpportunitiesFragment extends Fragment {
 
         fetchJobPosts();
 
-        // Set OnClickListener for the floating action button
         rootView.findViewById(R.id.btnAddJob).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Navigate to Add Job Fragment
                 navigateToAddJobFragment();
             }
         });
@@ -69,10 +67,10 @@ public class EconomicOpportunitiesFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        jobPostList.clear(); // Clear the list before adding new items
+                        jobPostList.clear();
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             JobPost jobPost = documentSnapshot.toObject(JobPost.class);
-                            jobPost.setId(documentSnapshot.getId()); // Set the document ID
+                            jobPost.setId(documentSnapshot.getId());
                             jobPostList.add(jobPost);
                         }
                         adapter.notifyDataSetChanged();
@@ -91,7 +89,7 @@ public class EconomicOpportunitiesFragment extends Fragment {
     private void navigateToAddJobFragment() {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new AddJobFragment());
-        transaction.addToBackStack(null); // Optional: Add to back stack for navigation
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 }

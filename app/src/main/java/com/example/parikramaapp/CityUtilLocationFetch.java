@@ -49,8 +49,8 @@ public class CityUtilLocationFetch {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10000) // Update interval in milliseconds
-                .setFastestInterval(5000); // Fastest update interval in milliseconds
+                .setInterval(10000)
+                .setFastestInterval(5000);
 
         fusedLocationClient.requestLocationUpdates(locationRequest, new LocationCallback() {
             @Override
@@ -59,7 +59,7 @@ public class CityUtilLocationFetch {
                 Location location = locationResult.getLastLocation();
                 if (location != null) {
                     String city = fetchCity(context, location.getLatitude(), location.getLongitude());
-                    fusedLocationClient.removeLocationUpdates(this); // Stop continuous location updates
+                    fusedLocationClient.removeLocationUpdates(this);
                     fetchListener.onCityFetched(city);
                 } else {
                     fetchListener.onCityFetched("Unknown location");

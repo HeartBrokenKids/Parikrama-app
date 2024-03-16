@@ -1,10 +1,14 @@
 package com.example.parikramaapp.foodRescue;
 
+import static java.security.AccessController.getContext;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +42,6 @@ public class FoodListingAdapter extends RecyclerView.Adapter<FoodListingAdapter.
         holder.title.setText(listing.getTitle());
         holder.description.setText(listing.getDescription());
 
-        // Convert latitude and longitude to a rough estimate of the city
         String city = LocationHelper.getCityFromCoordinates(holder.itemView.getContext(), listing.getLocation().getLatitude(), listing.getLocation().getLongitude());
         holder.location.setText(String.format(Locale.getDefault(), "City: %s", city));
         if (listing.getImageUrl() != null && !listing.getImageUrl().isEmpty()) {
@@ -46,10 +49,8 @@ public class FoodListingAdapter extends RecyclerView.Adapter<FoodListingAdapter.
                     .load(listing.getImageUrl())
                     .into(holder.foodListingImage);
         } else {
-            // Handle case where image URL is null or empty
-            // You can set a placeholder or hide the ImageView
+            Log.d("AdapterError", "Image URL not found");
         }
-        // Check if expiryTime is not null before formatting
         if (listing.getExpiryTime() != null) {
             holder.expiryTime.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(listing.getExpiryTime().toDate()));
         } else {
@@ -59,7 +60,6 @@ public class FoodListingAdapter extends RecyclerView.Adapter<FoodListingAdapter.
         holder.quantity.setText(String.format(Locale.getDefault(), "Quantity: %s", listing.getQuantity())); // Use %s for a string
         holder.donorId.setText(String.format(Locale.getDefault(), "Donor ID: %s", listing.getDonorId()));
 
-        // Check if timePosted is not null before formatting
         if (listing.getTimePosted() != null) {
             holder.timePosted.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(listing.getTimePosted().toDate()));
         } else {
@@ -90,7 +90,7 @@ public class FoodListingAdapter extends RecyclerView.Adapter<FoodListingAdapter.
         TextView donorId;
         TextView timePosted;
         TextView status;
-        ImageView foodListingImage; // Add this ImageView
+        ImageView foodListingImage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -102,7 +102,7 @@ public class FoodListingAdapter extends RecyclerView.Adapter<FoodListingAdapter.
             donorId = itemView.findViewById(R.id.foodListingDonorId);
             timePosted = itemView.findViewById(R.id.foodListingTimePosted);
             status = itemView.findViewById(R.id.foodListingStatus);
-            foodListingImage = itemView.findViewById(R.id.foodListingImage); // Initialize foodListingImage
+            foodListingImage = itemView.findViewById(R.id.foodListingImage);
         }
     }
 }

@@ -19,14 +19,13 @@ public class serviceAdapter extends RecyclerView.Adapter<serviceAdapter.ViewHold
     private List<serviceItem> servicesFull;
     private LayoutInflater inflater;
     private ItemClickListener clickListener;
-    private List<serviceItem> allServices; // All possible services
-    private List<serviceItem> displayedServices; // Services to be displayed based on filter
+    private List<serviceItem> allServices;
+    private List<serviceItem> displayedServices;
 
-    // Constructor
     serviceAdapter(Context context, List<serviceItem> services) {
         this.inflater = LayoutInflater.from(context);
         this.allServices = services;
-        this.displayedServices = new ArrayList<>(services); // Initially display all
+        this.displayedServices = new ArrayList<>(services);
     }
 
     public void filterDisplayedServices(boolean[] selectedStates) {

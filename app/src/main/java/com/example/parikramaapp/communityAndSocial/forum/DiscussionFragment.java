@@ -35,7 +35,6 @@ public class DiscussionFragment extends Fragment implements AddDiscussionBottomS
     private String forumId;
 
     public DiscussionFragment() {
-        // Required empty public constructor
     }
 
     public static DiscussionFragment newInstance(String forumId) {
@@ -72,7 +71,6 @@ public class DiscussionFragment extends Fragment implements AddDiscussionBottomS
 
         recyclerViewDiscussions.setAdapter(adapter);
 
-        // Set click listener
         adapter.setClickListener(new DiscussionAdapter.ItemClickListener() {
             @Override
             public void onItemClick(String discussionId) {
@@ -80,7 +78,6 @@ public class DiscussionFragment extends Fragment implements AddDiscussionBottomS
             }
         });
 
-        // Fetch discussions
         fetchDiscussions();
 
         return rootView;
@@ -88,7 +85,7 @@ public class DiscussionFragment extends Fragment implements AddDiscussionBottomS
 
     private void showNewDiscussionBottomSheet() {
         AddDiscussionBottomSheet newDiscussionBottomSheetDialogFragment = AddDiscussionBottomSheet.newInstance(forumId);
-        newDiscussionBottomSheetDialogFragment.setDiscussionCreationListener(this); // Set the current fragment as the listener
+        newDiscussionBottomSheetDialogFragment.setDiscussionCreationListener(this);
         newDiscussionBottomSheetDialogFragment.show(getChildFragmentManager(), newDiscussionBottomSheetDialogFragment.getClass().getSimpleName());
     }
 
@@ -96,15 +93,11 @@ public class DiscussionFragment extends Fragment implements AddDiscussionBottomS
         if (forumId != null && !forumId.isEmpty()) {
             DiscussionDetailsFragment fragment = DiscussionDetailsFragment.newInstance(forumId, discussionId);
 
-            // Begin a fragment transaction.
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back.
             transaction.replace(R.id.fragment_container, fragment);
             transaction.addToBackStack(null);
 
-            // Commit the transaction.
             transaction.commit();
         } else {
             Toast.makeText(getContext(), "Error: Forum ID is not available.", Toast.LENGTH_SHORT).show();
@@ -116,7 +109,6 @@ public class DiscussionFragment extends Fragment implements AddDiscussionBottomS
         if (getArguments() != null) {
             String forumId = getArguments().getString("forumId");
 
-            // Clear the existing data before fetching new
             discussionTitles.clear();
             discussionIds.clear();
 

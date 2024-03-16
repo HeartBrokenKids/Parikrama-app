@@ -55,7 +55,6 @@ public class GetNearbyPlace extends AsyncTask<Object, String, String>
     private List<Marker> markers = new ArrayList<>();
 
     private void DisplayNearbyPlaces(List<HashMap<String, String>> nearByPlacesList) {
-        // Remove all previous markers
         for (Marker marker : markers) {
             marker.remove();
         }
@@ -64,7 +63,6 @@ public class GetNearbyPlace extends AsyncTask<Object, String, String>
         markers.clear();
         Log.d("after_clearing", markers.toString());
 
-        // Add new markers
         for (HashMap<String, String> googleNearbyPlace : nearByPlacesList) {
             String nameOfPlace = googleNearbyPlace.get("place_name");
             String vicinity = googleNearbyPlace.get("vicinity");
@@ -77,13 +75,11 @@ public class GetNearbyPlace extends AsyncTask<Object, String, String>
                     .title(nameOfPlace + " : " + vicinity)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
 
-            // Add marker to the map and store it in the list
             Marker marker = mMap.addMarker(markerOptions);
             markers.add(marker);
         }
         Log.d("after_clearing", markers.toString());
 
-        // Adjust camera position and zoom level
         if (!nearByPlacesList.isEmpty()) {
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
             for (HashMap<String, String> googleNearbyPlace : nearByPlacesList) {

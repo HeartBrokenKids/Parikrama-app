@@ -69,12 +69,10 @@ public class AddDiscussionBottomSheet extends BottomSheetDialogFragment {
 
         if (!title.isEmpty() && !content.isEmpty() && forumId != null) {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            // Create a new discussion map
             Map<String, Object> discussion = new HashMap<>();
             discussion.put("title", title);
             discussion.put("content", content);
 
-            // Add a new document with a generated ID
             db.collection("forums").document(forumId).collection("discussions")
                     .add(discussion)
                     .addOnSuccessListener(documentReference -> {

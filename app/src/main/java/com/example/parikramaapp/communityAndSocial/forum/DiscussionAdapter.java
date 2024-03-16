@@ -19,18 +19,14 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     private ArrayList<String> discussionIds;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-
-    // data is passed into the constructor
     DiscussionAdapter(Context context, ArrayList<String> titles, ArrayList<String> ids) {
         this.mInflater = LayoutInflater.from(context);
         this.discussionTitles = titles;
         this.discussionIds = ids;
     }
 
-    // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Ensure this is correctly pointing to your layout file
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_discussion, parent, false);
         return new ViewHolder(view);
     }
@@ -41,7 +37,6 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
 
 
 
-    // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String title = discussionTitles.get(position);
@@ -57,7 +52,7 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvDiscussionTitle; // Ensure this matches the ID in item_discussion.xml
+        TextView tvDiscussionTitle;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -65,19 +60,16 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Vi
         }
     }
 
-    // total number of rows
     @Override
     public int getItemCount() {
         return discussionTitles.size();
     }
 
 
-    // convenience method for getting data at click position
     String getItem(int id) {
         return discussionIds.get(id);
     }
 
-    // allows clicks events to be caught
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }

@@ -1,7 +1,7 @@
 package com.example.parikramaapp.economicOpportunities;
 
 public class JobPost {
-    private String id; // Add document ID field
+    private String id;
     private String title;
     private String userId;
     private String description;
@@ -9,10 +9,8 @@ public class JobPost {
     private String contactInfo;
 
     public JobPost() {
-        // Default constructor required for Firestore
     }
 
-    // Constructor with all fields
     public JobPost(String id, String title, String userId, String description, int upvotes, String contactInfo) {
         this.id = id;
         this.title = title;
@@ -22,7 +20,6 @@ public class JobPost {
         this.contactInfo = contactInfo;
     }
 
-    // Getters and setters
     public String getId() {
         return id;
     }
@@ -71,7 +68,6 @@ public class JobPost {
         this.contactInfo = contactInfo;
     }
 
-    // Method to increment upvotes
     public void incrementUpvotes() {
         upvotes++;
     }

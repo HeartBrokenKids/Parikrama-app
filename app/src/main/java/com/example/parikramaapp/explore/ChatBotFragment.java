@@ -33,7 +33,6 @@ public class ChatBotFragment extends Fragment {
     private static final String OPENAI_API_URL = "https://api.openai.com";
 
     public ChatBotFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -52,19 +51,15 @@ public class ChatBotFragment extends Fragment {
 
         OpenAIApiService openAIInterface = retrofit.create(OpenAIApiService.class);
 
-        // Call the method to get the user's city
         CityUtilLocationFetch.getUserCity(getContext(), new CityUtilLocationFetch.CityFetchListener() {
             @Override
             public void onCityFetched(String city) {
-                // Handle the fetched city here
                 if (!city.equals("Permission not granted")) {
-                    // City fetched successfully, update the initial context message
                     Map<String, String> initialContextMessage = new HashMap<>();
                     initialContextMessage.put("role", "system");
                     initialContextMessage.put("content", "You are a city-based assistant app. Help the user in exploring the city and answering any questions they may have. The city is "+city);
                     messagesList.add(initialContextMessage);
                 } else {
-                    // Permission not granted, handle it appropriately
                     appendMessage("User: Location permission not granted");
                 }
             }
@@ -80,7 +75,6 @@ public class ChatBotFragment extends Fragment {
                 userMessage.put("content", inputText);
                 messagesList.add(userMessage);
 
-                // Make a request to OpenAI API
                 sendRequestToOpenAI(messagesList, openAIInterface);
 
                 userInput.getText().clear();
@@ -91,21 +85,19 @@ public class ChatBotFragment extends Fragment {
     }
 
     private void sendRequestToOpenAI(List<Map<String, String>> messagesList, OpenAIApiService openAIInterface) {
-        // Create an instance of OpenAIRequest with the model and messages list
         OpenAIRequest openAIRequest = new OpenAIRequest("gpt-3.5-turbo", messagesList);
 
         try {
-            // Pass the OpenAIRequest object to the sendMessage method
             Call<OpenAIResponse> call = openAIInterface.sendMessage("Bearer " + OPENAI_API_KEY, openAIRequest);
-            Log.d(TAG, "Sending message to OpenAI: " + new Gson().toJson(openAIRequest)); // Log sending message
+            Log.d(TAG, "Sending message to OpenAI: " + new Gson().toJson(openAIRequest));
             call.enqueue(new Callback<OpenAIResponse>() {
                 @Override
                 public void onResponse(Call<OpenAIResponse> call, Response<OpenAIResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         OpenAIResponse openAIResponse = response.body();
-                        String botResponse = openAIResponse.getGeneratedText(); // using getGeneratedText method
+                        String botResponse = openAIResponse.getGeneratedText();
                         appendMessage("Wanderlust AI: " + botResponse);
-                        Log.d(TAG, "Received response from OpenAI: " + botResponse); // Log received response
+                        Log.d(TAG, "Received response from OpenAI: " + botResponse);
                     } else {
                         Log.e(TAG, "Error: " + response.message());
                     }

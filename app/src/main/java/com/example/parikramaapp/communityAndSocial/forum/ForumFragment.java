@@ -35,7 +35,6 @@ public class ForumFragment extends Fragment {
     private static final String TAG = "ForumFragment";
 
     public ForumFragment() {
-        // Required empty public constructor
     }
 
     public static ForumFragment newInstance() {
@@ -61,16 +60,15 @@ public class ForumFragment extends Fragment {
 
         recyclerViewForums.setAdapter(adapter);
 
-        // Set item click listener for the RecyclerView
         adapter.setOnItemClickListener(new ForumAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
                 try {
                     String selectedForumId = forumIds.get(position);
-                    Log.d(TAG, "Selected forum ID: " + selectedForumId); // Log the selected forum ID
+                    Log.d(TAG, "Selected forum ID: " + selectedForumId);
                     navigateToDiscussionFragment(selectedForumId);
                 } catch (Exception e) {
-                    Log.e(TAG, "Error on item click: ", e); // Log any exception that occurs
+                    Log.e(TAG, "Error on item click: ", e);
                     Toast.makeText(getContext(), "Error handling the forum click", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -83,7 +81,7 @@ public class ForumFragment extends Fragment {
         return rootView;
     }
 
-    // Method to fetch forums from Firestore
+
     private void fetchForums() {
         db = FirebaseFirestore.getInstance();
         db.collection("forums")
@@ -113,13 +111,13 @@ public class ForumFragment extends Fragment {
         newForumDialog.setOnDialogDismissListener(new NewForumBottomSheetDialogFragment.OnDialogDismissListener() {
             @Override
             public void onDialogDismissed() {
-                fetchForums(); // This will refresh the forums list
+                fetchForums();
             }
         });
         newForumDialog.show(getChildFragmentManager(), newForumDialog.getClass().getSimpleName());
     }
 
-    // Method to navigate to DiscussionFragment and pass selected forum ID
+
     private void navigateToDiscussionFragment(String forumId) {
         DiscussionFragment discussionFragment = DiscussionFragment.newInstance(forumId);
         getFragmentManager().beginTransaction()

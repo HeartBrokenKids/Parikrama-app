@@ -58,20 +58,16 @@ public class LocalExplorationFragment extends Fragment implements OnMapReadyCall
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_local_exploration, container, false);
 
-        // Initialize fusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
 
-        // Set onClickListener for search button
         Button searchButton = view.findViewById(R.id.search_address);
         searchButton.setOnClickListener(v -> searchAddress());
 
-        // Set onClickListeners for nearby places buttons
         view.findViewById(R.id.hospitals_nearby).setOnClickListener(v -> fetchNearbyPlaces("hospital"));
         view.findViewById(R.id.schools_nearby).setOnClickListener(v -> fetchNearbyPlaces("school"));
         view.findViewById(R.id.restaurants_nearby).setOnClickListener(v -> fetchNearbyPlaces("restaurant"));
@@ -125,7 +121,6 @@ public class LocalExplorationFragment extends Fragment implements OnMapReadyCall
         else{
             fetchNearbyPlaces(address);
         }
-        // Perform address search and display on map (similar to your implementation)
     }
 
     @Override
@@ -139,20 +134,15 @@ public class LocalExplorationFragment extends Fragment implements OnMapReadyCall
 
         mMap.setMyLocationEnabled(true);
 
-        // Get the user's current location
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(requireActivity(), location -> {
             if (location != null) {
-                // Get user's current latitude and longitude
                 double currentLatitude = location.getLatitude();
                 double currentLongitude = location.getLongitude();
 
-                // Create LatLng object for user's current location
                 LatLng currentLatLng = new LatLng(currentLatitude, currentLongitude);
 
-                // Define zoom level
-                float zoomLevel = 15.0f; // Change this value as needed
+                float zoomLevel = 15.0f;
 
-                // Animate camera to user's current location with zoom level
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, zoomLevel));
             }
         });
@@ -175,21 +165,17 @@ public class LocalExplorationFragment extends Fragment implements OnMapReadyCall
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        // Implement if needed
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        // Implement if needed
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        // Implement if needed
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        // Implement if needed
     }
 }

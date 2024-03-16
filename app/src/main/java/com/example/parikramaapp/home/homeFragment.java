@@ -1,5 +1,7 @@
 package com.example.parikramaapp.home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.parikramaapp.R;
 import com.example.parikramaapp.communityAndSocial.CommunityMainFragment;
-import com.example.parikramaapp.communityAndSocial.news.LocalNewsFragment;
 import com.example.parikramaapp.economicOpportunities.EconomicOpportunitiesFragment;
 import com.example.parikramaapp.foodRescue.FoodRescueFragment;
 import com.example.parikramaapp.localExploration.LocalExplorationFragment;
@@ -32,34 +33,10 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
     private List<serviceItem> services;
     private serviceAdapter adapter;
     private boolean[] selectedPreferences;
+    private int lastSelectedSubFragmentIndex = -1;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
-
-    public homeFragment() {
-        // Required empty public constructor
-    }
-
-    public static homeFragment newInstance(String param1, String param2) {
-        homeFragment fragment = new homeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private static final String PREF_FILE_NAME = "homeFragmentPrefs";
+    private static final String LAST_SELECTED_INDEX_KEY = "lastSelectedIndex";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,7 +45,18 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
         setupRecyclerView(view);
         setupSearchView(view);
         setupEditButton(view);
+
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = requireContext().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        lastSelectedSubFragmentIndex = prefs.getInt(LAST_SELECTED_INDEX_KEY, -1);
+        if (lastSelectedSubFragmentIndex != -1) {
+            navigateToSubFragment(lastSelectedSubFragmentIndex);
+        }
     }
 
     private void initializeServicesList() {
@@ -112,46 +100,54 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
         });
     }
 
-
     private void setupEditButton(View view) {
         TextView editButton = view.findViewById(R.id.editbutton);
         editButton.setOnClickListener(v -> showPreferencesDialog());
     }
 
     private void showPreferencesDialog() {
-        // Convert your list of serviceItems to a list of Strings for the service names.
         List<String> serviceNames = new ArrayList<>();
         for (serviceItem item : services) {
-            serviceNames.add(item.getTitle()); // Assuming getServiceName() returns the name of the service.
+            serviceNames.add(item.getTitle());
         }
 
-        // Now use the newInstance method to create the PreferencesDialogFragment.
         PreferencesDialogFragment dialogFragment = PreferencesDialogFragment.newInstance(serviceNames, selectedPreferences);
-        dialogFragment.setTargetFragment(this, 0); // 'this' refers to homeFragment instance.
+        dialogFragment.setTargetFragment(this, 0);
         dialogFragment.show(getParentFragmentManager(), "PreferencesDialogFragment");
     }
-
 
     @Override
     public void onPreferencesSelected(boolean[] selectedPreferences) {
         this.selectedPreferences = selectedPreferences;
         adapter.filterDisplayedServices(selectedPreferences);
     }
+
     @Override
     public void onItemClick(View view, int position) {
+        lastSelectedSubFragmentIndex = position;
+        navigateToSubFragment(position);
+    }
+
+    private void navigateToSubFragment(int position) {
         serviceItem clickedItem = adapter.getCurrentItem(position);
         Fragment selectedFragment = null;
 
         if (clickedItem != null) {
             switch (clickedItem.getTitle()) {
-//                case "City Services":
-////                    selectedFragment = new CityServicesFragment();
-//                    break;
+                case "Environment and Health":
+                    Toast.makeText(getContext(), "Service not implemented yet.", Toast.LENGTH_SHORT).show();
+                    break;
+                case "Education":
+                    Toast.makeText(getContext(), "Service not implemented yet.", Toast.LENGTH_SHORT).show();
+                    break;
+                case "City Services":
+                    Toast.makeText(getContext(), "Service not implemented yet.", Toast.LENGTH_SHORT).show();
+                    break;
                 case "Food Rescue":
                     selectedFragment = new FoodRescueFragment();
                     break;
                 case "Transportation":
-                    selectedFragment = new TransportationFragment();
+                    Toast.makeText(getContext(), "Service not implemented yet.", Toast.LENGTH_SHORT).show();
                     break;
                 case "Local Exploration":
                     selectedFragment = new LocalExplorationFragment();
@@ -166,11 +162,9 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
                     selectedFragment = new TranslateFragment();
                     break;
                 default:
-                    Toast.makeText(getContext(), "Service not implemented yet.", Toast.LENGTH_SHORT).show();
                     break;
             }
 
-            // Perform the fragment transaction if a valid selection was made
             if (selectedFragment != null) {
                 requireActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, selectedFragment)
@@ -180,5 +174,14 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
         } else {
             Toast.makeText(getContext(), "Error: Item not found.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        SharedPreferences prefs = requireContext().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(LAST_SELECTED_INDEX_KEY, lastSelectedSubFragmentIndex);
+        editor.apply();
     }
 }

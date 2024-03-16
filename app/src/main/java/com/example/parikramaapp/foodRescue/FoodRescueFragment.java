@@ -42,14 +42,12 @@ public class FoodRescueFragment extends Fragment {
         fabAddFoodRescue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Navigate to AddFoodRescueCaseFragment
                 navigateToAddFoodRescueFragment();
             }
         });
 
         db = FirebaseFirestore.getInstance();
 
-        // Initialize the adapter
         adapter = new FoodListingAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 

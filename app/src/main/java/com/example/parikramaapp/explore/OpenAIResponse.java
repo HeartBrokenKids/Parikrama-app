@@ -18,7 +18,6 @@ public class OpenAIResponse {
     @SerializedName("choices")
     private OpenAIChoice[] choices;
 
-    // Getters for the fields
 
     public String getId() {
         return id;
@@ -40,7 +39,6 @@ public class OpenAIResponse {
         return choices;
     }
 
-    // Method to extract the content from the first choice
     public String getGeneratedText() {
         if (choices != null && choices.length > 0 && choices[0] != null && choices[0].getContent() != null) {
             return choices[0].getContent();

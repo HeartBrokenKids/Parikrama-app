@@ -47,7 +47,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             holder.titleTextView.setText(article.getTitle());
             holder.descriptionTextView.setText(article.getDescription());
             holder.publishedAtTextView.setText(article.getPublishedAt());
-//            Log.d("imgurl",article.getImageUrl());
             Picasso.get().load(article.getImageUrl()).placeholder(R.drawable.ic_launcher_background).into(holder.imageView);
         }
     }

@@ -74,7 +74,6 @@ public class NewForumBottomSheetDialogFragment extends BottomSheetDialogFragment
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Create the new forum
         Map<String, Object> forumData = new HashMap<>();
         forumData.put("title", forumTitle);
         db.collection("forums")
