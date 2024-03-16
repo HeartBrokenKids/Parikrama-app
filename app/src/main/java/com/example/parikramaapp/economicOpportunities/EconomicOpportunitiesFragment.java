@@ -89,7 +89,6 @@ public class EconomicOpportunitiesFragment extends Fragment {
 
 
     private void navigateToAddJobFragment() {
-        // Replace the current fragment with AddJobFragment
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, new AddJobFragment());
         transaction.addToBackStack(null); // Optional: Add to back stack for navigation

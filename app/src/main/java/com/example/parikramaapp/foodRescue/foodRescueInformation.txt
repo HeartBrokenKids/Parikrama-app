@@ -6,13 +6,11 @@ Sure, based on your requirements, here are the Firebase Firestore collections yo
    - Fields:
      - `title`: Title of the food item.
      - `description`: Description of the food item.
-     - `location`: Location where the food is available (e.g., city or area).
-     - `expiry_time`: Time to expire or expiry date of the food item.
+     - `location`: Location where the food is available (lat, long co-ordinates)
+     - `expiryTime`: Time to expire or expiry date of the food item.
      - `quantity`: Quantity of the food item available.
-     - `pickup_location`: Location where the food can be picked up.
-     - `donor_id`: ID of the user who donated the food item (for future reference).
-     - `created_at`: Timestamp indicating when the listing was created.
-     - `updated_at`: Timestamp indicating when the listing was last updated.
+     - `donorId`: ID of the user who donated the food item (for future reference).
+     - `timePosted`: Timestamp indicating when the listing was created.
      - `status`: Status of the listing (e.g., available, pending pickup, picked up).
 
 2. **Pickup Requests Collection:**

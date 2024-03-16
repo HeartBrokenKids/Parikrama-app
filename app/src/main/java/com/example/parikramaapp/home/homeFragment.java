@@ -17,6 +17,7 @@ import com.example.parikramaapp.R;
 import com.example.parikramaapp.communityAndSocial.CommunityMainFragment;
 import com.example.parikramaapp.communityAndSocial.news.LocalNewsFragment;
 import com.example.parikramaapp.economicOpportunities.EconomicOpportunitiesFragment;
+import com.example.parikramaapp.foodRescue.FoodRescueFragment;
 import com.example.parikramaapp.localExploration.LocalExplorationFragment;
 import com.example.parikramaapp.translate.TranslateFragment;
 import com.example.parikramaapp.transportation.TransportationFragment;
@@ -147,7 +148,7 @@ public class homeFragment extends Fragment implements serviceAdapter.ItemClickLi
 //                    selectedFragment = new CityServicesFragment();
                     break;
                 case "Food Rescue":
-//                    selectedFragment = new FoodRescueFragment();
+                    selectedFragment = new FoodRescueFragment();
                     break;
                 case "Transportation":
                     selectedFragment = new TransportationFragment();
