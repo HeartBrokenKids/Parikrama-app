@@ -180,7 +180,7 @@ public class LocalNewsFragment extends Fragment {
         NewsService newsService = retrofit.create(NewsService.class);
 
         // Define the API key
-        String apiKey = "69d6dd6a81fa4b2ca2d88c3459443a42";
+        String apiKey = getString(R.string.news_api_key);
 
         // Call the API to fetch news
         Call<NewsResponse> call = newsService.getTopHeadlines("india", apiKey);
