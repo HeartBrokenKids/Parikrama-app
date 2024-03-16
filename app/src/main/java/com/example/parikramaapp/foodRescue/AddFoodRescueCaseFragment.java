@@ -1,6 +1,8 @@
 package com.example.parikramaapp.foodRescue;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,22 +29,27 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class AddFoodRescueCaseFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int MAP_REQUEST_CODE = 2;
 
     private EditText titleEditText;
     private EditText descriptionEditText;
     private EditText locationEditText;
-    private EditText expiryTimeEditText;
+    private Button expiryTimeButton;
     private EditText quantityEditText;
     private ImageView imageView;
     private Button uploadButton;
 
     private Uri imageUri;
+    private Calendar expiryDateCalendar; // Added Calendar instance
 
     private FirebaseFirestore db;
     private StorageReference storageRef;
@@ -52,11 +61,20 @@ public class AddFoodRescueCaseFragment extends Fragment {
 
         titleEditText = view.findViewById(R.id.titleEditText);
         descriptionEditText = view.findViewById(R.id.descriptionEditText);
-        locationEditText = view.findViewById(R.id.locationEditText);
-        expiryTimeEditText = view.findViewById(R.id.expiryTimeEditText);
+        expiryTimeButton = view.findViewById(R.id.expiryTimeButton);
         quantityEditText = view.findViewById(R.id.quantityEditText);
         imageView = view.findViewById(R.id.imageView);
         uploadButton = view.findViewById(R.id.uploadButton);
+
+        Button selectLocationButton = view.findViewById(R.id.selectLocationButton);
+        selectLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Launch map activity here
+                Intent mapIntent = new Intent(getContext(), MapActivity.class);
+                startActivityForResult(mapIntent, MAP_REQUEST_CODE);
+            }
+        });
 
         db = FirebaseFirestore.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference("food_rescue_images");
@@ -65,6 +83,15 @@ public class AddFoodRescueCaseFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 openFileChooser();
+            }
+        });
+
+        expiryDateCalendar = Calendar.getInstance(); // Initialize Calendar instance
+
+        expiryTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateTimePickerDialog();
             }
         });
 
@@ -78,6 +105,40 @@ public class AddFoodRescueCaseFragment extends Fragment {
         return view;
     }
 
+    private void showDateTimePickerDialog() {
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(requireContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        expiryDateCalendar.set(Calendar.YEAR, year);
+                        expiryDateCalendar.set(Calendar.MONTH, monthOfYear);
+                        expiryDateCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        expiryDateCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        expiryDateCalendar.set(Calendar.MINUTE, minute);
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                        String formattedDateTime = sdf.format(expiryDateCalendar.getTime());
+
+                        expiryTimeButton.setText(formattedDateTime);
+                    }
+                }, hour, minute, false);
+
+                timePickerDialog.show();
+            }
+        }, year, month, day);
+
+        datePickerDialog.show();
+    }
+
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -89,10 +150,14 @@ public class AddFoodRescueCaseFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
-                && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
             imageView.setImageURI(imageUri);
+        } else if (requestCode == MAP_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+            double latitude = data.getDoubleExtra("latitude", 0);
+            double longitude = data.getDoubleExtra("longitude", 0);
+            String selectedLocation = latitude + ", " + longitude;
+            locationEditText.setText(selectedLocation);
         }
     }
 
@@ -100,7 +165,7 @@ public class AddFoodRescueCaseFragment extends Fragment {
         final String title = titleEditText.getText().toString().trim();
         final String description = descriptionEditText.getText().toString().trim();
         final String location = locationEditText.getText().toString().trim();
-        final String expiryTime = expiryTimeEditText.getText().toString().trim();
+        final String expiryTime = expiryTimeButton.getText().toString().trim();
         final String quantity = quantityEditText.getText().toString().trim();
 
         if (title.isEmpty() || description.isEmpty() || location.isEmpty() || expiryTime.isEmpty() || quantity.isEmpty() || imageUri == null) {
@@ -118,8 +183,8 @@ public class AddFoodRescueCaseFragment extends Fragment {
                             @Override
                             public void onSuccess(Uri uri) {
                                 String imageUrl = uri.toString();
-                                String donorId = "user1"; // hardcoded donor_id
-                                String status = "available"; // default status
+                                String donorId = "user1";
+                                String status = "available";
 
                                 Map<String, Object> foodRescueCase = new HashMap<>();
                                 foodRescueCase.put("title", title);
@@ -129,7 +194,7 @@ public class AddFoodRescueCaseFragment extends Fragment {
                                 foodRescueCase.put("quantity", quantity);
                                 foodRescueCase.put("donor_id", donorId);
                                 foodRescueCase.put("status", status);
-                                foodRescueCase.put("timePosted", new Date().getTime()); // current time
+                                foodRescueCase.put("timePosted", new Date().getTime());
                                 foodRescueCase.put("imageUrl", imageUrl);
 
                                 db.collection("food_rescue_cases")
@@ -138,11 +203,10 @@ public class AddFoodRescueCaseFragment extends Fragment {
                                             @Override
                                             public void onSuccess(Object o) {
                                                 Toast.makeText(getContext(), "Food rescue case added successfully", Toast.LENGTH_SHORT).show();
-                                                // Clear form fields and image view
                                                 titleEditText.setText("");
                                                 descriptionEditText.setText("");
                                                 locationEditText.setText("");
-                                                expiryTimeEditText.setText("");
+                                                expiryTimeButton.setText("");
                                                 quantityEditText.setText("");
                                                 imageView.setImageResource(android.R.color.transparent);
                                                 imageUri = null;

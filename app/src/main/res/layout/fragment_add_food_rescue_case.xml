@@ -30,8 +30,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Title"
                     android:background="@drawable/edit_text_background"
-                    android:padding="10dp"
-                    />
+                    android:padding="10dp" />
 
                 <EditText
                     android:id="@+id/descriptionEditText"
@@ -40,28 +39,15 @@
                     android:hint="Description"
                     android:background="@drawable/edit_text_background"
                     android:padding="10dp"
-
                     android:layout_marginTop="16dp"
                     android:inputType="textMultiLine"
                     android:minLines="3" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/locationInputLayout"
+                <Button
+                    android:id="@+id/selectLocationButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
-
-                    <EditText
-                        android:id="@+id/locationEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Location (lat, long)"
-                        android:background="@drawable/edit_text_background"
-                        android:padding="10dp"
-                        android:clickable="true"
-                        android:focusable="false" />
-
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:text="Select Location"
+                    android:layout_marginTop="16dp"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/expiryTimeInputLayout"
@@ -69,15 +55,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp">
 
-                    <EditText
-                        android:id="@+id/expiryTimeEditText"
+                    <Button
+                        android:id="@+id/expiryTimeButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Expiry Time"
-                        android:background="@drawable/edit_text_background"
-                        android:padding="10dp"
-                        android:clickable="true"
-                        android:focusable="false" />
+                        android:text="Select Expiry Time" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,7 +70,6 @@
                     android:hint="Quantity"
                     android:background="@drawable/edit_text_background"
                     android:padding="10dp"
-
                     android:layout_marginTop="16dp"/>
 
                 <Button
